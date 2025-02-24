@@ -1,0 +1,189 @@
+/* Home.css */
+.home-page {
+  font-family: "Arial", sans-serif;
+}
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2a7aad;
+}
+
+.nav-tabs button {
+  margin: 0 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.nav-tabs button.active {
+  border-bottom: 2px solid #2a7aad;
+  color: #2a7aad;
+}
+
+.account-btn {
+  background-color: #2a7aad;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Hero Section */
+.hero-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 5%;
+}
+
+.hero-content {
+  flex: 1;
+  padding-right: 2rem;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.book-btn {
+  background-color: #2a7aad;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.hero-img {
+  flex: 1;
+  max-width: 30%;
+  height: auto;
+}
+
+/* Specialties Section */
+.specialties-section {
+  padding: 4rem 5%;
+  background-color: #f5f9fc;
+}
+
+.specialties-section h2 {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.specialties-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+.specialty-card {
+  text-align: center;
+}
+
+.specialty-card img {
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  width: 40px; /* Adjust width to match icon size */
+  height: 40px; /* Adjust height to maintain aspect ratio */
+  object-fit: cover; /* Ensures the image maintains a good aspect ratio */
+}
+
+/* Top Doctors Section */
+.top-doctors-section {
+  padding: 4rem 5%;
+}
+
+.top-doctors-section h2 {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.doctor-card {
+  text-align: center;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.doctor-card img {
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  width: 80px; /* Adjust width to match icon size */
+  height: 80px; /* Adjust height to maintain aspect ratio */
+  object-fit: cover; /* Ensures the image maintains a good aspect ratio */
+}
+
+/* Banner Section */
+.banner-section {
+  display: flex;
+  align-items: center;
+  padding: 4rem 5%;
+  background-color: #f5f9fc;
+}
+
+.banner-img {
+  max-width: 40%;
+  height: auto;
+  margin-right: 3rem;
+}
+
+.banner-content {
+  flex: 1;
+}
+
+.banner-content p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .nav-tabs {
+    margin: 1rem 0;
+  }
+
+  .hero-section,
+  .banner-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-img,
+  .banner-img {
+    max-width: 100%;
+    margin-top: 2rem;
+  }
+
+  .specialties-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

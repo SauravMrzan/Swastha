@@ -1,43 +1,53 @@
 import React, { useState } from "react";
-import {assets} from '../../assets/images'
-import { NavLink, useNavigate } from "react-router-dom";
+import "../css/Navbar.css";
+import "../css/Home.css";
+import Menu from "./Dropdown";
+import { Link } from "react-router-dom";
+
+import { useLocation } from "react-router-dom";
+
 const Navbar = () => {
+  const location = useLocation();
 
-    const navigate = useNavigate();
-    const [showMenu,setShowMenu] = useState(false);
-    const [token,setToken] = useState(true);
+  console.log(location.pathname);
 
-    return(
-        <div className ='main'>
-            <img className='logo' src={assets.Bha} alt=""/>
-            <ul className="navs">
-                <NavLink to={'/'}>
-                    <li className="py-1" >HOME</li>
-                    <hr className="hr"/>
-                </NavLink>                
-            </ul>
-            <div className="createBtn">
-                {
-                    token
-                    ?<div>
-                        <img className="profilepic" src = {assets.profilepic} alt=""/>
-                        <img className="dropdown" src="assets.dropdownicon" alt=""/>
-                        <div className="hover">
-                            <div className="hoverOptions">
-                                <p onClick={()=> navigate('MyProfile')}>My Profile</p>
-                                <p onClick={()=> navigate('MyAppointment')}>My Appointments</p>
-                                <p onClick={()=> setToken(false)}>Log Out</p>
-                            </div>
-                        </div>
+  return (
+    <nav className="header">
+      <div className="logo">Swastha</div>
 
-                    </div>
-                    :<button onClick={()=> navigate('/Login')} className="btnCreate">Create Account</button>
-
-                }
-                
-            </div>
-        </div>
-    )
+      <div className="nav-t">
+        <Link
+          to="/Home"
+          className={`${location?.pathname === "/Home" ? "active-tabs" : ""}`}
+        >
+          <a href="">Home</a>
+        </Link>
+        <Link
+          to="/AllDoctors"
+          className={`${
+            location?.pathname === "/AllDoctors" ? "active-tabs" : ""
+          }`}
+        >
+          <a href="">All Doctors</a>
+        </Link>
+        <Link
+          to="/About"
+          className={`${location?.pathname === "/About" ? "active-tabs" : ""}`}
+        >
+          <a href="">About</a>
+        </Link>
+        <Link
+          to="/Contact"
+          className={`${
+            location?.pathname === "/Contact" ? "active-tabs" : ""
+          }`}
+        >
+          <a href="">Contact</a>
+        </Link>
+      </div>
+      <Menu title="Create Account" />
+    </nav>
+  );
 };
 
 export default Navbar;

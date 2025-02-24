@@ -1,0 +1,16 @@
+.nav-t {
+  display: flex;
+  gap: 10;
+  align-items: center;
+}
+.nav-t a {
+  text-decoration: none;
+  margin-right: 20px;
+  color: black;
+}
+
+.active-tabs {
+  border-bottom: 2px solid #2a7aad;
+  color: #2a7aad;
+  width: fit-content;
+}

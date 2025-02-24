@@ -1,0 +1,98 @@
+/* ==================== */
+/* Variables            */
+/* ==================== */
+:root {
+    --primary-color: #4a9e73;
+    --secondary-color: #1b814c;
+    --background-gradient: linear-gradient(132deg, #f9dfec, #a1d6d8, #ffeddc);
+    --text-color: black;
+    --light-text-color: #deefff;
+}
+
+/* ==================== */
+/* Global Styles        */
+/* ==================== */
+html {
+    scroll-behavior: smooth;
+    overflow: auto;
+}
+
+body {
+    height: auto;
+    margin: 0;
+}
+
+/* ==================== */
+/* Header               */
+/* ==================== */
+.head {
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+    margin-bottom: 70px;
+}
+
+.head.head-small {
+    height: 70px;
+    background: var(--background-gradient);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ==================== */
+/* Footer               */
+/* ==================== */
+.footer {
+    margin-top: 0px;
+    display: flexbox;
+    position: static;
+    height: auto;
+    padding: 0px 0px;
+    background-color: #4e4e4e;
+}
+
+.mid-foot h2, .Touch h2 {
+    color: var(--primary-color);
+    font-size: 18px;
+}
+
+.mid-foot li, .Touch li {
+    list-style: none;
+    color: var(--light-text-color);
+}
+
+/* ==================== */
+/* Media Queries        */
+/* ==================== */
+@media(max-width: 1200px) {
+    .logo img {
+        width: 180px;
+        height: 180px;
+        margin-left: 20px;
+        margin-top: 50px;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .head.head-small {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .ScrollView {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .slideshow {
+        width: 750px;
+        margin-right: 60px;
+        height: 650px;
+    }
+}

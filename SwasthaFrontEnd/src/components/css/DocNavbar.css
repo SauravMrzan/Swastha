@@ -1,0 +1,26 @@
+.logout-btn {
+  background-color: #2196f3; /* Blue */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease-in-out, transform 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: #dc3545; /* Red on hover */
+  transform: scale(1.05); /* Slightly increase size */
+}
+
+.logout-btn:active {
+  transform: scale(0.95); /* Button click effect */
+}
+.type {
+  font-weight: bold; /* Makes text bold */
+  font-size: 18px; /* Adjusts font size */
+  color: #6086ef; /* Darker text for better visibility */
+  text-transform: uppercase; /* Makes text uppercase */
+  margin-left: 20px; /* Adds spacing from logo */
+}

@@ -1,6 +1,8 @@
 const Doctor = require("../model/Doctor");
 const fs = require("fs");
 const path = require("path");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const registerDoctor = async (req, res) => {
   const {
@@ -57,7 +59,9 @@ const loginDoctor = async (req, res) => {
     return res.status(400).json({ error: "email and password are required" });
   }
   try {
-    const checkingDoctor = await Doctor.findOne({ where: { email } });
+    const checkingDoctor = await Doctor.findOne({
+      where: { doctorEmail: email },
+    });
     if (!checkingDoctor) {
       return res.status(400).json({ error: "Email does not exists" });
     }
@@ -69,7 +73,7 @@ const loginDoctor = async (req, res) => {
 
     // Generate a JWT token
     const token = jwt.sign(
-      { id: checkingDoctor.id, username: checkingDoctor.name },
+      { id: checkingDoctor.id, username: checkingDoctor.doctorName },
       process.env.JWT_SECRET || "HJVVVJHAVJFUIGIJKABKFKBAF34984787831",
       { expiresIn: "24h" }
     );
@@ -77,7 +81,11 @@ const loginDoctor = async (req, res) => {
     res.status(200).json({
       message: "Login successful",
       token,
-      Doctor: { id: user.id, username: Doctor.name },
+      Doctor: {
+        id: checkingDoctor.id,
+        username: checkingDoctor.doctorName,
+        type: checkingDoctor.type,
+      },
     });
   } catch (error) {
     console.error(error);
@@ -88,7 +96,17 @@ const loginDoctor = async (req, res) => {
 // Create a new doctor
 const createDoctor = async (req, res) => {
   try {
-    const { doctorName, speciality,doctorEmail, phone,address,experience, medicalID, description, dob } = req.body;
+    const {
+      doctorName,
+      speciality,
+      doctorEmail,
+      phone,
+      address,
+      experience,
+      medicalID,
+      description,
+      dob,
+    } = req.body;
     const doctorImage = req.file ? req.file.filename : null;
 
     const doctor = await Doctor.create({

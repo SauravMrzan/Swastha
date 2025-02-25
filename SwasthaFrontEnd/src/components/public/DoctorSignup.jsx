@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../css/DoctorSignup.css";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const DoctorSignup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,6 +17,9 @@ const DoctorSignup = () => {
     address: "",
   });
 
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
   const specialties = [
     "Cardiology",
     "Dermatology",
@@ -25,6 +29,7 @@ const DoctorSignup = () => {
     "General Practice",
   ];
 
+  const navigate = useNavigate();
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission
@@ -32,7 +37,7 @@ const DoctorSignup = () => {
     try {
       const requestData = { ...formData, type: "doctor" };
       const response = await axios.post(
-        "http://localhost:4000/doctor/add",
+        "http://localhost:4000/doctor/docRegister",
         requestData
       );
 
@@ -57,6 +62,23 @@ const DoctorSignup = () => {
     // }
   };
 
+  // console.log(loginData)
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:4000/doctor/docLogin", {
+        email: loginEmail,
+        password: loginPassword,
+      });
+      localStorage.setItem('token', res?.data?.token)
+      localStorage.setItem('doctor', JSON.stringify(res?.data?.Doctor))
+      console.log(res);
+      navigate("/DoctorDash");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -79,7 +101,7 @@ const DoctorSignup = () => {
           </button>
         </div>
 
-        <form onSubmit={handleSignupSubmit}>
+        <form onSubmit={isLogin? handleLoginSubmit: handleSignupSubmit}>
           {!isLogin && (
             <>
               <div className="input-group">
@@ -148,10 +170,10 @@ const DoctorSignup = () => {
           <div className="input-group">
             <input
               type="email"
-              name="doctorEmail"
+              // name="email"
               placeholder="Email"
-              value={formData.doctorEmail}
-              onChange={handleChange}
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
               required
             />
           </div>
@@ -159,10 +181,10 @@ const DoctorSignup = () => {
           <div className="input-group">
             <input
               type="password"
-              name="password"
+              // name="password"
               placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
               required
             />
           </div>
@@ -180,7 +202,11 @@ const DoctorSignup = () => {
             </div>
           )}
 
-          <button type="submit" className="submit-btn">
+          <button
+            type="submit"
+            className="submit-btn"
+            // onClick={handleLoginSubmit}
+          >
             {isLogin ? "Login" : "Sign Up"}
           </button>
         </form>

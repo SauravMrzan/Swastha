@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 const DoctorProtectedRoute = () => {
-  const User = JSON.parse(localStorage.getItem("user")); // Retrieve token from localStorage
-  const type = User?.type; // Retrieve user type from token
+  const Doctor = JSON.parse(localStorage.getItem("doctor")); // Retrieve token from localStorage
+  const type = Doctor?.type; // Retrieve user type from token
 
-  console.log("UserProtectedRoute", User, type);
-  return type === "user" ? <Outlet /> : <Navigate to="/login" replace />;
+  console.log("DoctorProtectedRoute", Doctor, type);
+  return type === "doctor" ? <Outlet /> : <Navigate to="/DocSignup" replace />;
 };
 
 export default DoctorProtectedRoute;

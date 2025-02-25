@@ -9,6 +9,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import UserProtectedRoute from "./components/Routes/UserProtectedRoute";
+import DoctorProtectedRoute from "./components/Routes/DoctorProtectedRoute";
 // import Footer from "./components/public/Footer";
 // import Navbar from './components/public/Navbar';
 
@@ -47,7 +48,6 @@ function App() {
           <Route path="/AdminDash" element={<AdminDash />} />
           <Route path="/Admin" element={<Admin />} />
           <Route path="/About" element={<About />} />
-                  <Route path="/DoctorDash" element={<DoctorDash />} />
           <Route path="/Home" element={<Home />} />
           <Route path="/AllDoctors" element={<AllDoctors />} />
           <Route path="/Doctor" element={<Doctor />} />
@@ -56,10 +56,12 @@ function App() {
           <Route path="/AdminSign" element={<AdminSign />} />
 
           {/* Protected Routes */}
-        <Route element={< UserProtectedRoute />}>
-        <Route path="/PatientDash" element={<PatientDash />} />
-  
-        </Route>
+          <Route element={<UserProtectedRoute />}>
+            <Route path="/PatientDash" element={<PatientDash />} />
+          </Route>
+          <Route element={<DoctorProtectedRoute />}>
+            <Route path="/DoctorDash" element={<DoctorDash />} />
+          </Route>
         </Routes>
         {/* <Footer/> */}
       </Suspense>

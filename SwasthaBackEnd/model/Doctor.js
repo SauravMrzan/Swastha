@@ -10,7 +10,7 @@ const Doctor = sequelize.define(
       autoIncrement: true,
     },
     doctorName: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     doctorEmail: {
@@ -22,11 +22,11 @@ const Doctor = sequelize.define(
       allowNull: false,
     },
     speciality: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     medicalID: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     dob: {
@@ -38,8 +38,8 @@ const Doctor = sequelize.define(
       allowNull: false,
     },
     experience: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     phone: {
       type: DataTypes.STRING,

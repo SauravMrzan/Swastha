@@ -3,7 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const { sequelize, testConnection } = require("./database/db");
 const userRoute = require("./routes/userRoute");
-const clinicRoute = require("./routes/clinicRoute");
+const doctorRoute = require("./routes/doctorRoute"); // Corrected the route path
 const User = require("./model/User"); // Import the User model
 const Doctor = require("./model/Doctor");
 const Clinics = require("./model/Clinic");
@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 console.log("Initializing Server.................................");
 // app.use(authenticateToken);
 app.use("/users", userRoute);
-app.use("/clinic", clinicRoute); // Corrected the route path
+app.use("/doctor", doctorRoute); // Corrected the route path
 
 async function startServer() {
   try {

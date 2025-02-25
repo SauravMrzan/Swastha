@@ -9,12 +9,12 @@ const AdminDashboard = () => {
     {
       id: 1,
       name: "Dr. Sarah Johnson",
-      specialty: "Cardiology",
+      speciality: "Cardiology",
       email: "sarah@clinic.com",
       experience: "10 years",
-      fee: "$150",
+      
       description: "Senior Cardiologist",
-      profileImg: "",
+      doctorImage: "",
     },
   ]);
 
@@ -31,14 +31,16 @@ const AdminDashboard = () => {
   ]);
 
   const [newDoctor, setNewDoctor] = useState({
-    name: "",
-    specialty: "",
-    email: "",
-    address: "",
+    doctorName: "",
+    speciality: "",
+    doctorEmail: "",
+    phone: "",
     experience: "",
-    fee: "",
     description: "",
-    profileImg: null,
+    doctorImage: null,
+    dob: "",
+    medicalID: "",
+    address: "",
   });
 
   const handleAppointmentStatus = (id, status) => {
@@ -52,22 +54,26 @@ const AdminDashboard = () => {
     const doctorWithId = { ...newDoctor, id: doctors.length + 1 };
     setDoctors([...doctors, doctorWithId]);
     setNewDoctor({
-      name: "",
-      specialty: "",
-      email: "",
+      doctorName: "",
+      speciality: "",
+      doctorEmail: "",
+      phone: "",
       address: "",
       experience: "",
-      fee: "",
       description: "",
-      profileImg: null,
+      doctorImage: null,
     });
   };
 
   const handleFileChange = (e) => {
     setNewDoctor({
       ...newDoctor,
-      profileImg: URL.createObjectURL(e.target.files[0]),
+      doctorImage: URL.createObjectURL(e.target.files[0]),
     });
+  };
+
+  const handleDeleteDoctor = (doctorId) => {
+    setDoctors(doctors.filter((doctor) => doctor.id !== doctorId));
   };
 
   return (
@@ -201,9 +207,9 @@ const AdminDashboard = () => {
                     onChange={handleFileChange}
                     accept="image/*"
                   />
-                  {newDoctor.profileImg && (
+                  {newDoctor.doctorImage && (
                     <img
-                      src={newDoctor.profileImg}
+                      src={newDoctor.doctorImage}
                       alt="Preview"
                       className="profile-preview"
                     />
@@ -226,9 +232,9 @@ const AdminDashboard = () => {
                   <label>Specialty</label>
                   <input
                     type="text"
-                    value={newDoctor.specialty}
+                    value={newDoctor.speciality}
                     onChange={(e) =>
-                      setNewDoctor({ ...newDoctor, specialty: e.target.value })
+                      setNewDoctor({ ...newDoctor, speciality: e.target.value })
                     }
                     required
                   />
@@ -247,12 +253,75 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Address</label>
+                  <label>Date of Birth</label>
+                  <input
+                    type="date"
+                    value={newDoctor.dob}
+                    onChange={(e) =>
+                      setNewDoctor({ ...newDoctor, dob: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>License Number</label>
+                  <input
+                    type="text"
+                    value={newDoctor.medicalID}
+                    onChange={(e) =>
+                      setNewDoctor({
+                        ...newDoctor,
+                        medicalID: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Phone Number</label>
+                  <input
+                    type="text"
+                    value={newDoctor.phone}
+                    onChange={(e) =>
+                      setNewDoctor({
+                        ...newDoctor,
+                        phone: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Specialty</label>
+                  <select
+                    value={newDoctor.speciality}
+                    onChange={(e) =>
+                      setNewDoctor({ ...newDoctor, speciality: e.target.value })
+                    }
+                    required
+                  >
+                    <option value="">Select Specialty</option>
+                    <option value="Cardiologist">Cardiologist</option>
+                    <option value="Dermatologist">Dermatologist</option>
+                    <option value="Pediatrician">Pediatrician</option>
+                    <option value="Orthopedist">Orthopedist</option>
+                    <option value="General Medicine">General Medicine</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Address of Work</label>
                   <input
                     type="text"
                     value={newDoctor.address}
                     onChange={(e) =>
-                      setNewDoctor({ ...newDoctor, address: e.target.value })
+                      setNewDoctor({
+                        ...newDoctor,
+                        address: e.target.value,
+                      })
                     }
                     required
                   />
@@ -265,18 +334,6 @@ const AdminDashboard = () => {
                     value={newDoctor.experience}
                     onChange={(e) =>
                       setNewDoctor({ ...newDoctor, experience: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Consultation Fee</label>
-                  <input
-                    type="text"
-                    value={newDoctor.fee}
-                    onChange={(e) =>
-                      setNewDoctor({ ...newDoctor, fee: e.target.value })
                     }
                     required
                   />
@@ -324,21 +381,42 @@ const AdminDashboard = () => {
                 <table>
                   <thead>
                     <tr>
+                      <th>Profile</th>
                       <th>Name</th>
                       <th>Specialty</th>
                       <th>Email</th>
+                      <th>Phone</th>
                       <th>Experience</th>
-                      <th>Fee</th>
+                      <th>Address</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {doctors.map((doctor) => (
                       <tr key={doctor.id}>
+                        <td>
+                          {doctor.doctorImage && (
+                            <img
+                              src={doctor.doctorImage}
+                              alt="Profile"
+                              className="table-profile-img"
+                            />
+                          )}
+                        </td>
                         <td>{doctor.name}</td>
-                        <td>{doctor.specialty}</td>
+                        <td>{doctor.speciality}</td>
                         <td>{doctor.email}</td>
+                        <td>{doctor.phone}</td>
                         <td>{doctor.experience}</td>
-                        <td>{doctor.fee}</td>
+                        <td>{doctor.address}</td>
+                        <td>
+                          <button
+                            onClick={() => handleDeleteDoctor(doctor.id)}
+                            className="delete-btn"
+                          >
+                            Delete
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -347,26 +425,38 @@ const AdminDashboard = () => {
                 <div className="doctor-grid">
                   {doctors.map((doctor) => (
                     <div className="doctor-card" key={doctor.id}>
-                      {doctor.profileImg && (
+                      <button
+                        onClick={() => handleDeleteDoctor(doctor.id)}
+                        className="delete-btn"
+                      >
+                        Delete
+                      </button>
+                      {doctor.doctorImage && (
                         <img
-                          src={doctor.profileImg}
+                          src={doctor.doctorImage}
                           alt={doctor.name}
                           className="doctor-image"
                         />
                       )}
                       <h3>{doctor.name}</h3>
                       <p>
-                        <strong>Specialty:</strong> {doctor.specialty}
+                        <strong>Specialty:</strong> {doctor.speciality}
                       </p>
                       <p>
                         <strong>Experience:</strong> {doctor.experience}
                       </p>
                       <p>
-                        <strong>Fee:</strong> {doctor.fee}
+                        <strong>Address:</strong> {doctor.address}
                       </p>
                       <p>
                         <strong>Email:</strong> {doctor.email}
                       </p>
+                      <button
+                        onClick={() => handleDeleteDoctor(doctor.id)}
+                        className="delete-btn"
+                      >
+                        Delete
+                      </button>
                     </div>
                   ))}
                 </div>

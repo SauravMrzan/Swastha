@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import "../css/About.css";
 import "../css/Home.css";
-
+import about from "../../assets/about.png";
 import Navbar from "./Navbar";
 
 const AboutUs = () => {
@@ -12,7 +12,7 @@ const AboutUs = () => {
       <h1 className="title">About Us</h1>
       <div className="about-section">
         <div className="image-container">
-          <img src="" alt="Doctor" className="image" />
+          <img src={about} about alt="Doctor" className="image" />
         </div>
         <div className="text-container">
           <p className="description">

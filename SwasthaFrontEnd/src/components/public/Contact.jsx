@@ -2,6 +2,7 @@ import React from "react";
 import "../css/Contact.css";
 import Navbar from "./Navbar";
 import { div } from "framer-motion/m";
+import contact from "../../assets/contact.png"
 
 const ContactPage = () => {
   return (
@@ -11,7 +12,7 @@ const ContactPage = () => {
         <div className="contact-container">
           {/* Left Side - Image */}
           <div className="contact-image">
-            <img src="https://via.placeholder.com/600" alt="Contact Us" />
+            <img src={contact} alt="Contact Us" />
           </div>
 
           {/* Right Side - Contact Info */}

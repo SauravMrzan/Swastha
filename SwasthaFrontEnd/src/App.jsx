@@ -8,6 +8,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import UserProtectedRoute from "./components/Routes/UserProtectedRoute";
 // import Footer from "./components/public/Footer";
 // import Navbar from './components/public/Navbar';
 
@@ -19,9 +20,6 @@ const AdminDash = React.lazy(() =>
 );
 const Admin = React.lazy(() => import("./components/private/AdminDashboard"));
 const Doctors = React.lazy(() => import("./components/private/Doctors"));
-const MyAppointments = React.lazy(() =>
-  import("./components/private/MyAppointments")
-);
 const PatientDash = React.lazy(() =>
   import("./components/private/PatientDash")
 );
@@ -33,6 +31,7 @@ const DoctorSignup = React.lazy(() =>
   import("./components/public/DoctorSignup")
 );
 const Contact = React.lazy(() => import("./components/public/Contact"));
+const AdminSign = React.lazy(() => import("./components/public/AdminSignup"));
 
 function App() {
   return (
@@ -48,14 +47,19 @@ function App() {
           <Route path="/AdminDash" element={<AdminDash />} />
           <Route path="/Admin" element={<Admin />} />
           <Route path="/About" element={<About />} />
-          <Route path="/MyAppointments" element={<MyAppointments />} />
-          <Route path="/PatientDash" element={<PatientDash />} />
-          <Route path="/DoctorDash" element={<DoctorDash />} />
+                  <Route path="/DoctorDash" element={<DoctorDash />} />
           <Route path="/Home" element={<Home />} />
           <Route path="/AllDoctors" element={<AllDoctors />} />
           <Route path="/Doctor" element={<Doctor />} />
           <Route path="/DocSignup" element={<DoctorSignup />} />
           <Route path="/Contact" element={<Contact />} />
+          <Route path="/AdminSign" element={<AdminSign />} />
+
+          {/* Protected Routes */}
+        <Route element={< UserProtectedRoute />}>
+        <Route path="/PatientDash" element={<PatientDash />} />
+  
+        </Route>
         </Routes>
         {/* <Footer/> */}
       </Suspense>

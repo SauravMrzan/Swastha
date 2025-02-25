@@ -1,17 +1,18 @@
-//
 import React, { useState } from "react";
 import "../css/DoctorSignup.css";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const DoctorSignup = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    doctorName: "",
+    doctorEmail: "",
     password: "",
     confirmPassword: "",
-    specialty: "",
+    speciality: "",
     dob: "",
-    license: "",
+    medicalID: "",
     address: "",
   });
 
@@ -24,10 +25,36 @@ const DoctorSignup = () => {
     "General Practice",
   ];
 
-  const handleSubmit = (e) => {
+  const handleSignupSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission
     console.log(formData);
+    try {
+      const requestData = { ...formData, type: "doctor" };
+      const response = await axios.post(
+        "http://localhost:4000/doctor/add",
+        requestData
+      );
+
+      if (response.status === 200) {
+        console.log("Signup Successful:", response.data.token);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", response.data.user);
+        toast.success("Register Successful");
+        navigate("/DoctorDash");
+      } else {
+        console.error("Signup failed:", response.data.error);
+        // setErrors({ general: response.data.error });
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      toast.error("Register Failed");
+
+      // setErrors({ general: "Something went wrong. Please try again." });
+    }
+    // finally {
+    //   setIsLoading(false);
+    // }
   };
 
   const handleChange = (e) => {
@@ -52,15 +79,15 @@ const DoctorSignup = () => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSignupSubmit}>
           {!isLogin && (
             <>
               <div className="input-group">
                 <input
                   type="text"
-                  name="name"
+                  name="doctorName"
                   placeholder="Doctor Name"
-                  value={formData.name}
+                  value={formData.doctorName}
                   onChange={handleChange}
                   required
                 />
@@ -69,8 +96,8 @@ const DoctorSignup = () => {
               <div className="row">
                 <div className="input-group">
                   <select
-                    name="specialty"
-                    value={formData.specialty}
+                    name="speciality"
+                    value={formData.speciality}
                     onChange={handleChange}
                     required
                   >
@@ -97,9 +124,9 @@ const DoctorSignup = () => {
               <div className="input-group">
                 <input
                   type="text"
-                  name="license"
+                  name="medicalID"
                   placeholder="License Number"
-                  value={formData.license}
+                  value={formData.medicalID}
                   onChange={handleChange}
                   required
                 />
@@ -121,9 +148,9 @@ const DoctorSignup = () => {
           <div className="input-group">
             <input
               type="email"
-              name="email"
+              name="doctorEmail"
               placeholder="Email"
-              value={formData.email}
+              value={formData.doctorEmail}
               onChange={handleChange}
               required
             />

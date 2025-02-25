@@ -29,9 +29,29 @@ const Doctor = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    dob: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    experience: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     doctorImage: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   },
   {

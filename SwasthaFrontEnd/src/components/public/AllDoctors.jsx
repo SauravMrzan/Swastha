@@ -6,6 +6,7 @@ import doc1 from "../../assets/doc1.png";
 import doc2 from "../../assets/doc2.png";
 import doc3 from "../../assets/doc3.png";
 import doc4 from "../../assets/doc4.png";
+import doc5 from "../../assets/doc5.png";
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState("home");
@@ -46,7 +47,7 @@ const Home = () => {
     {
       name: "Dr. Rachel Green",
       specialty: "Neurology",
-      img: "https://via.placeholder.com/200",
+      img: doc5,
     },
   ];
 

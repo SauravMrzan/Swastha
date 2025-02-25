@@ -25,11 +25,17 @@ const DoctorAdmin = () => {
   ]);
 
   const [profile, setProfile] = useState({
-    name: "Dr. Sarah Johnson",
-    email: "sarah@clinic.com",
-    specialty: "Cardiology",
+    doctorImage: null,
+    doctorName: "Dr. Sarah Johnson",
+    doctorEmail: "sarah@clinic.com",
+    speciality: "Cardiology",
     phone: "+1 234 567 890",
     address: "123 Medical St, Health City",
+    dateOfBirth: "1985-03-15",
+    licenseNumber: "MD-123456",
+    experience: 10,
+    description:
+      "Experienced cardiologist with specialization in interventional procedures and heart failure management.",
   });
 
   const [editMode, setEditMode] = useState(false);
@@ -154,6 +160,21 @@ const DoctorAdmin = () => {
                     setEditMode(false);
                   }}
                 >
+                  <div className="profile-img-upload">
+                    <label>
+                      Profile Image:
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          setProfile((prev) => ({
+                            ...prev,
+                            doctorImage: e.target.files[0],
+                          }))
+                        }
+                      />
+                    </label>
+                  </div>
                   <label>
                     Name:
                     <input
@@ -176,8 +197,8 @@ const DoctorAdmin = () => {
                     Specialty:
                     <input
                       type="text"
-                      name="specialty"
-                      value={profile.specialty}
+                      name="speciality"
+                      value={profile.speciality}
                       onChange={handleProfileEdit}
                     />
                   </label>
@@ -198,10 +219,61 @@ const DoctorAdmin = () => {
                       onChange={handleProfileEdit}
                     />
                   </label>
+                  <label>
+                    Date of Birth:
+                    <input
+                      type="date"
+                      name="dateOfBirth"
+                      value={profile.dateOfBirth}
+                      onChange={handleProfileEdit}
+                    />
+                  </label>
+
+                  <label>
+                    License Number:
+                    <input
+                      type="text"
+                      name="licenseNumber"
+                      value={profile.licenseNumber}
+                      onChange={handleProfileEdit}
+                    />
+                  </label>
+
+                  <label>
+                    Experience (years):
+                    <input
+                      type="number"
+                      name="experience"
+                      value={profile.experience}
+                      onChange={handleProfileEdit}
+                    />
+                  </label>
+
+                  <label>
+                    Description:
+                    <textarea
+                      name="description"
+                      value={profile.description}
+                      onChange={handleProfileEdit}
+                    />
+                  </label>
                   <button type="submit">Save Changes</button>
                 </form>
               ) : (
                 <div className="profile-info">
+                  <div className="profile-header">
+                    {profile.doctorImage && (
+                      <img
+                        src={URL.createObjectURL(profile.doctorImage)}
+                        alt="Profile"
+                        className="profile-image"
+                      />
+                    )}
+                    <div className="profile-basic-info">
+                      <h3>{profile.name}</h3>
+                      <p>{profile.specialty}</p>
+                    </div>
+                  </div>
                   <p>
                     <strong>Name:</strong> {profile.name}
                   </p>
@@ -209,13 +281,25 @@ const DoctorAdmin = () => {
                     <strong>Email:</strong> {profile.email}
                   </p>
                   <p>
-                    <strong>Specialty:</strong> {profile.specialty}
+                    <strong>Specialty:</strong> {profile.speciality}
                   </p>
                   <p>
                     <strong>Phone:</strong> {profile.phone}
                   </p>
                   <p>
                     <strong>Address:</strong> {profile.address}
+                  </p>
+                  <p>
+                    <strong>Date of Birth:</strong> {profile.dateOfBirth}
+                  </p>
+                  <p>
+                    <strong>License Number:</strong> {profile.licenseNumber}
+                  </p>
+                  <p>
+                    <strong>Experience:</strong> {profile.experience} years
+                  </p>
+                  <p>
+                    <strong>Description:</strong> {profile.description}
                   </p>
                 </div>
               )}

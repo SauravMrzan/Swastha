@@ -36,14 +36,14 @@ const Signup = ({ setToken }) => {
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
-  
+
     let hasError = false;
-  
+
     const passwordLengthValid = signPassword.length >= 8;
     const containsUpperCase = /[A-Z]/.test(signPassword);
     const containsNumber = /\d/.test(signPassword);
     const containsSpecialChar = /[@$!%*?&#]/.test(signPassword);
-  
+
     if (!passwordLengthValid) {
       setPasswordError("Passwords must have atleast 8 characters.");
       hasError = true;
@@ -58,7 +58,7 @@ const Signup = ({ setToken }) => {
     } else {
       setPasswordError("");
     }
-  
+
     if (phoneNumber.length !== 10) {
       setPhoneNumberError("Contact number must be exactly 10 digits");
       hasError = true;
@@ -67,23 +67,29 @@ const Signup = ({ setToken }) => {
     }
     if (hasError) return;
     setIsLoading(true);
-  
+
     try {
       const requestData = {
-        name: username,
+        username: username,
         email: signEmail,
         password: signPassword,
         phone: phoneNumber,
         address: address,
+        type: "user",
       };
       console.log("Request Data:", requestData);
-  
-      const response = await axios.post("http://localhost:4000/users/register", requestData);
-  
+
+      const response = await axios.post(
+        "http://localhost:4000/users/register",
+        requestData
+      );
+
       if (response.status === 200) {
-        console.log("Signup Successful:", response.data);
+        console.log("Signup Successful:", response.data.token);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", response.data.user);
         toast.success("Register Successful");
-        navigate("/Land");
+        navigate("/Home");
       } else {
         console.error("Signup failed:", response.data.error);
         setErrors({ general: response.data.error });
@@ -91,7 +97,7 @@ const Signup = ({ setToken }) => {
     } catch (err) {
       console.error("Error:", err);
       toast.error("Register Failed");
-  
+
       setErrors({ general: "Something went wrong. Please try again." });
     } finally {
       setIsLoading(false);
@@ -106,13 +112,15 @@ const Signup = ({ setToken }) => {
         email: logEmail,
         password: logPassword,
       });
-
+      console.log("Response:", response);
       if (response.status === 200) {
-        setToken(response.data.token);
+        // setToken(response.data.token);
         console.log("Logging in, token recieved:", response.data.token);
         toast.success("Login Sucessful");
-        localStorage.setItem("token", response.data.token);
-        navigate("/Dashboard");
+        localStorage.setItem("token", response?.data?.token);
+        localStorage.setItem("user", JSON.stringify(response?.data?.user));
+
+        navigate("/Home");
       } else {
         console.error("Login failed:", response.data.error);
         setErrors({ general: response.data.error });

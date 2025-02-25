@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const registerUser = async (req, res) => {
-  const { username, email, phone, address, password } = req.body;
+  const { username, email, phone, address, password,type } = req.body;
   if (!username || !email || !phone || !address || !password) {
     return res.status(400).json({
       error: "Fill the form properly!",
@@ -24,9 +24,12 @@ const registerUser = async (req, res) => {
       phone,
       address,
       password: hashpassword,
+      type,
     });
+    newUser.save();
     res.status(200).json({ message: "User Successfully Created" });
     // console.log(newUser);
+    
     console.log("User Created Successfully");
   } catch (error) {
     res.status(400).json({ error: "Something Went Wrong" });
@@ -61,7 +64,7 @@ const loginUser = async (req, res) => {
     res.status(200).json({
       message: "Login successful",
       token,
-      user: { id: checkingUser.id, username: checkingUser.username },
+      user: { id: checkingUser.id, username: checkingUser.username, type: checkingUser.type },
     });
   } catch (error) {
     console.error(error);

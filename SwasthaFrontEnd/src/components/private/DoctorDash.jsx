@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../css/DoctorDash.css";
 import Navbar from "../public/Navbar";
 import DocNavbar from "./DocNavbar";
+import axios from "axios";
 const DoctorAdmin = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [appointments, setAppointments] = useState([
@@ -24,18 +25,19 @@ const DoctorAdmin = () => {
     // Add more sample data
   ]);
 
+  const [doctorDetail, setDoctorDetail] = useState({});
+
   const [profile, setProfile] = useState({
     doctorImage: null,
-    doctorName: "Dr. Sarah Johnson",
-    doctorEmail: "sarah@clinic.com",
-    speciality: "Cardiology",
-    phone: "+1 234 567 890",
-    address: "123 Medical St, Health City",
-    dateOfBirth: "1985-03-15",
-    licenseNumber: "MD-123456",
-    experience: 10,
-    description:
-      "Experienced cardiologist with specialization in interventional procedures and heart failure management.",
+    doctorName: "",
+    doctorEmail: "",
+    speciality: "",
+    phone: "",
+    address: "",
+    dob: "",
+    medicalID: "",
+    experience: "",
+    description: "",
   });
 
   const [editMode, setEditMode] = useState(false);
@@ -49,6 +51,52 @@ const DoctorAdmin = () => {
   const handleProfileEdit = (e) => {
     const { name, value } = e.target;
     setProfile((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const doctorId = JSON.parse(localStorage.getItem("doctor")).id;
+
+  const fetchDoctors = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:4000/doctor/viewDoctor/${doctorId}`
+      );
+      if (res) {
+        console.log(res?.data?.doctorName);
+        setDoctorDetail(res.data);
+        setProfile((prevProfile) => ({
+          ...prevProfile,
+          doctorName: res?.data?.doctorName,
+          doctorEmail: res.data.doctorEmail || "",
+          speciality: res.data.speciality || "",
+          phone: res.data.phone || "",
+          address: res.data.address || "",
+          dob: res.data.dob || "",
+          medicalID: res.data.medicalID || "",
+          experience: res.data.experience || "",
+          description: res.data.description || "",
+          doctorImage: res.data.doctorImage || null,
+        }));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchDoctors();
+  }, []);
+
+  const handleDoctorEdit = async () => {
+    try {
+      const res = await axios.put(
+        `http://localhost:4000/doctor/updateDoctor/${doctorId}`,
+        { ...profile, file: doctorImage }
+      );
+      if (res) fetchDoctors();
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -158,6 +206,7 @@ const DoctorAdmin = () => {
                   onSubmit={(e) => {
                     e.preventDefault();
                     setEditMode(false);
+                    handleDoctorEdit();
                   }}
                 >
                   <div className="profile-img-upload">
@@ -179,8 +228,8 @@ const DoctorAdmin = () => {
                     Name:
                     <input
                       type="text"
-                      name="name"
-                      value={profile.name}
+                      name="doctorName"
+                      value={profile.doctorName}
                       onChange={handleProfileEdit}
                     />
                   </label>
@@ -188,8 +237,8 @@ const DoctorAdmin = () => {
                     Email:
                     <input
                       type="email"
-                      name="email"
-                      value={profile.email}
+                      name="doctorEmail"
+                      value={profile.doctorEmail}
                       onChange={handleProfileEdit}
                     />
                   </label>
@@ -223,8 +272,8 @@ const DoctorAdmin = () => {
                     Date of Birth:
                     <input
                       type="date"
-                      name="dateOfBirth"
-                      value={profile.dateOfBirth}
+                      name="dob"
+                      value={profile.dob}
                       onChange={handleProfileEdit}
                     />
                   </label>
@@ -233,8 +282,8 @@ const DoctorAdmin = () => {
                     License Number:
                     <input
                       type="text"
-                      name="licenseNumber"
-                      value={profile.licenseNumber}
+                      name="medicalID"
+                      value={profile.medicalID}
                       onChange={handleProfileEdit}
                     />
                   </label>
@@ -270,36 +319,44 @@ const DoctorAdmin = () => {
                       />
                     )}
                     <div className="profile-basic-info">
-                      <h3>{profile.name}</h3>
-                      <p>{profile.specialty}</p>
+                      <h3>{doctorDetail.name}</h3>
+                      <p>{doctorDetail.speciality}</p>
                     </div>
                   </div>
                   <p>
-                    <strong>Name:</strong> {profile.name}
+                    <strong>Name:</strong> {doctorDetail?.doctorName || "N/A"}
                   </p>
                   <p>
-                    <strong>Email:</strong> {profile.email}
+                    <strong>Email:</strong> {doctorDetail?.doctorEmail || "N/A"}
                   </p>
                   <p>
-                    <strong>Specialty:</strong> {profile.speciality}
+                    <strong>Specialty:</strong>{" "}
+                    {doctorDetail?.speciality || "N/A"}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {profile.phone}
+                    <strong>Phone:</strong> {doctorDetail?.phone || "N/A"}
                   </p>
                   <p>
-                    <strong>Address:</strong> {profile.address}
+                    <strong>Address:</strong> {doctorDetail?.address || "N/A"}
                   </p>
                   <p>
-                    <strong>Date of Birth:</strong> {profile.dateOfBirth}
+                    <strong>Date of Birth:</strong> {new Date(doctorDetail.dob).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }) || "N/A"}
                   </p>
                   <p>
-                    <strong>License Number:</strong> {profile.licenseNumber}
+                    <strong>License Number:</strong>{" "}
+                    {doctorDetail?.medicalID || "N/A"}
                   </p>
                   <p>
-                    <strong>Experience:</strong> {profile.experience} years
+                    <strong>Experience:</strong>{" "}
+                    {doctorDetail?.experience || "N/A"} years
                   </p>
                   <p>
-                    <strong>Description:</strong> {profile.description}
+                    <strong>Description:</strong>{" "}
+                    {doctorDetail?.description || "N/A"}
                   </p>
                 </div>
               )}

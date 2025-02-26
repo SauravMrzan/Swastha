@@ -4,9 +4,11 @@ const bodyParser = require("body-parser");
 const { sequelize, testConnection } = require("./database/db");
 const userRoute = require("./routes/userRoute");
 const doctorRoute = require("./routes/doctorRoute"); // Corrected the route path
+const adminRoute = require("./routes/adminRoute");
 const User = require("./model/User"); // Import the User model
 const Doctor = require("./model/Doctor");
-const Clinics = require("./model/Clinic");
+const Admin = require("./model/Admin");
+const Booking = require("./model/Booking");
 // const { authenticateToken } = require("./middleware/token-middleware");
 const app = express();
 const PORT = 4000;
@@ -19,6 +21,7 @@ console.log("Initializing Server.................................");
 // app.use(authenticateToken);
 app.use("/users", userRoute);
 app.use("/doctor", doctorRoute); // Corrected the route path
+app.use("/admin", adminRoute);
 
 async function startServer() {
   try {

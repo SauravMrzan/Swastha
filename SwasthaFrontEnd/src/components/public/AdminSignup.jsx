@@ -4,14 +4,15 @@ import { toast } from "react-toastify";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 // import { authApi } from "../api/api";
 import "../css/AdminSignup.css";
+import axios from "axios";
 
 const AdminSignup = ({ setAdminToken }) => {
   const [isLogin, setIsLogin] = useState(true);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [adminName, setAdminName] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [phone, setPhone] = useState("");
+  const [contact, setContact] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -19,40 +20,86 @@ const AdminSignup = ({ setAdminToken }) => {
 
   const toggleAuthMode = () => setIsLogin(!isLogin);
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setIsLoading(true);
-      setErrors({});
+  const handleSignupSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setErrors({});
 
-      try {
-        if (isLogin) {
-          // Admin Login
-          const { data } = await authApi.adminLogin(email, password);
-          localStorage.setItem("adminToken", data.token);
-          setAdminToken(data.token);
-          toast.success("Admin Login Successful");
-          navigate("/admin/dashboard");
-        } else {
-          // Admin Signup (should be protected in backend)
-          const { data } = await authApi.adminRegister({
-            name,
-            email,
-            password,
-            phone,
-            role: "admin"
-          });
-          toast.success("Admin Registration Successful");
-          toggleAuthMode(); // Switch to login after successful registration
-        }
-      } catch (error) {
-        const errorMessage = error.response?.data?.error ||
-          (isLogin ? "Login failed" : "Registration failed");
-        toast.error(errorMessage);
-        setErrors({ general: errorMessage });
-      } finally {
-        setIsLoading(false);
+    try {
+      const requestData = {
+        adminName,
+        adminEmail,
+        password,
+        contact,
+        type: "admin",
+      };
+      console.log("Request Data:", requestData);
+
+      const response = await axios.post(
+        "http://localhost:4000/admin/adminRegister",
+        requestData
+      );
+
+      if (response.status === 200) {
+        console.log("Signup Successful:", response.data.token);
+        localStorage.setItem("adminToken", response.data.token);
+        localStorage.setItem("admin", response.data.admin);
+        toast.success("Admin Register Successful");
+        navigate("/AdminDash");
+      } else {
+        console.error("Signup failed:", response.data.error);
+        setErrors({ general: response.data.error });
+        // Admin Signup (should be protected in backend)
+        // const { data } = await authApi.adminRegister({
+        //   adminName,
+        //   adminEmail,
+        //   password,
+        //   phone,
+        //   type: "admin",
+        // });
+        // toast.success("Admin Registration Successful");
+        // toggleAuthMode(); // Switch to login after successful registration
       }
-    };
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Admin Registration Failed");
+      setErrors({ general: "Something went wrong. Please try again." });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/admin/adminLogin",
+        {
+          email: adminEmail,
+          password: password,
+        }
+      );
+      console.log("Response:", response);
+      if (response.status === 200) {
+        // setToken(response.data.token);
+        console.log("Logging in, token recieved:", response.data.token);
+        toast.success("Admin Login Sucessful");
+        localStorage.setItem("adminToken", response?.data?.token);
+        localStorage.setItem("admin", JSON.stringify(response?.data?.admin));
+
+        navigate("/AdminDash");
+      } else {
+        console.error("Login failed:", response.data.error);
+        setErrors({ general: response.data.error });
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      setErrors({ general: "Something went wrong. Please try again." });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="admin-auth-container">
@@ -61,14 +108,14 @@ const AdminSignup = ({ setAdminToken }) => {
           {isLogin ? "Admin Login" : "Admin Registration"}
         </h2>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSignupSubmit}>
           {!isLogin && (
             <div className="admin-input-group">
               <input
                 type="text"
                 placeholder="Full Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={adminName}
+                onChange={(e) => setAdminName(e.target.value)}
                 required
                 className="admin-input"
               />
@@ -79,8 +126,8 @@ const AdminSignup = ({ setAdminToken }) => {
             <input
               type="email"
               placeholder="Admin Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={adminEmail}
+              onChange={(e) => setAdminEmail(e.target.value)}
               required
               className="admin-input"
             />
@@ -110,8 +157,8 @@ const AdminSignup = ({ setAdminToken }) => {
               <input
                 type="tel"
                 placeholder="Contact Number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
                 required
                 className="admin-input"
                 pattern="[0-9]{10}"

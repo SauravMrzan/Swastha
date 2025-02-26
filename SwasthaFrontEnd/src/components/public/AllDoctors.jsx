@@ -7,10 +7,13 @@ import doc2 from "../../assets/doc2.png";
 import doc3 from "../../assets/doc3.png";
 import doc4 from "../../assets/doc4.png";
 import doc5 from "../../assets/doc5.png";
+import axios from "axios";
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [selectedSpecialty, setSelectedSpecialty] = useState(null);
+
+  const [doctorsList, setDoctorsList] = useState([]);
 
   // Sample data
   const specialties = [
@@ -56,12 +59,28 @@ const Home = () => {
       ? allDoctors
       : allDoctors.filter((doctor) => doctor.specialty === selectedSpecialty);
 
+  React.useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/doctor/allDoctors");
+        console.log(res, "res");
+        setDoctorsList(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchDoctors();
+  }, []);
+
+  console.log(doctorsList);
+
   return (
     <div className="home-page">
       {/* Header (same as before) */}
       <Navbar />
       {/* All Doctors Page */}
       {/* {activeTab === "doctors" && ( */}
+
       <div className="doctors-page">
         {/* Specialty Sidebar */}
         <nav className="specialty-sidebar">
@@ -86,11 +105,11 @@ const Home = () => {
           <h2>{selectedSpecialty || "All Doctors"}</h2>
           <div className="doctors-grid">
             <Link to="/Doctors">
-              {filteredDoctors.map((doctor) => (
-                <div key={doctor.name} className="doctor-card">
-                  <img src={doctor.img} alt={doctor.name} />
-                  <h3>{doctor.name}</h3>
-                  <p>{doctor.specialty}</p>
+              {doctorsList?.map((doctor) => (
+                <div key={doctor.id} className="doctor-card">
+                  <img src={doctor.doctorImage} alt={doctor.name} />
+                  <h3>{doctor.doctorName}</h3>
+                  <p>{doctor.speciality}</p>
                 </div>
               ))}
             </Link>

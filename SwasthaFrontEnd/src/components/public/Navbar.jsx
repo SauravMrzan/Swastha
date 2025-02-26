@@ -10,6 +10,8 @@ const Navbar = () => {
   const location = useLocation();
 
   console.log(location.pathname);
+  
+  const token = localStorage.getItem('token')
 
   return (
     <nav className="header">
@@ -45,7 +47,8 @@ const Navbar = () => {
           <a href="">Contact</a>
         </Link>
       </div>
-      <Menu title="Create Account" />
+      
+      {token? <button>Logout</button> : <Menu title="Create Account" />}
     </nav>
   );
 };

@@ -160,7 +160,7 @@ const getDoctorById = async (req, res) => {
 const updateDoctor = async (req, res) => {
   try {
     const { id } = req.params;
-    const { doctorName, speciality, medicalID } = req.body;
+    const { doctorName, doctorEmail, phone, speciality, medicalID,experience,description } = req.body;
     const doctor = await Doctor.findByPk(id);
 
     if (!doctor) {
@@ -182,9 +182,13 @@ const updateDoctor = async (req, res) => {
 
     await doctor.update({
       doctorName,
+      doctorEmail,
       speciality,
+      phone,
       medicalID,
       doctorImage,
+      experience,
+      description,
     });
 
     res.status(200).json(doctor);

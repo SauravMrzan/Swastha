@@ -34,6 +34,8 @@ const DocNavbar = () => {
   const handleLogout = () => {
     // Clear any stored user session if needed
     console.log("Logging out...");
+    localStorage.removeItem("token");
+    localStorage.removeItem("doctor");
     navigate("/Home"); // Redirect to landing page
   };
 

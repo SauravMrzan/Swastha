@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { hash } = require("crypto");
 
 const registerDoctor = async (req, res) => {
   const {
@@ -111,12 +112,13 @@ const createDoctor = async (req, res) => {
       type,
     } = req.body;
     const doctorImage = req.file ? req.file.filename : null;
-
+    const saltRound = 10;
+    const hashpassword = await bcrypt.hash(password, saltRound);
     const doctor = await Doctor.create({
       doctorName,
       speciality,
       doctorEmail,
-      password,
+      password: hashpassword,
       phone,
       address,
       medicalID,
@@ -138,7 +140,9 @@ const createDoctor = async (req, res) => {
 // Get all doctors
 const getAllDoctors = async (req, res) => {
   try {
-    const doctors = await Doctor.findAll();
+    const { speciality } = req.query;
+    const filter = speciality ? { where: { speciality } } : {};
+    const doctors = await Doctor.findAll(filter);
     res.status(200).json(doctors);
   } catch (error) {
     res.status(500).json({ error: error.message });

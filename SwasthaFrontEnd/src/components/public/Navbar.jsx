@@ -57,7 +57,7 @@ const Navbar = () => {
         </Link>
       </div>
       
-      {token? <button onClick={handleLogout}>Logout</button> : <Menu title="Create Account" />}
+      {token? <button className= "logout-btn" onClick={handleLogout}>Logout</button> : <Menu title="Create Account" />}
     </nav>
   );
 };

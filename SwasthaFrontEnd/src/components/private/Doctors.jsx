@@ -63,7 +63,7 @@ const DoctorPage = () => {
   }, []);
   // console.log(doctorsList, "doctorsList");
 
-  const userId = JSON.parse(localStorage.getItem("user")).id;
+  const userId = JSON.parse(localStorage.getItem("user")).id || "";
   const booking = async () => {
     try {
       const response = await axios.post(
@@ -95,11 +95,10 @@ const DoctorPage = () => {
             <h1>{doctorInfo?.doctorName}</h1>
             <p className="specialty">{doctorInfo?.speciality}</p>
 
-            <p className="experience">{doctorInfo?.experience}</p>
-            <div className="about-section">
-              <h3>About</h3>
-              <p>{doctorInfo?.about}</p>
-            </div>
+            <p className="experience">
+              Experience:{doctorInfo?.experience} years
+            </p>
+            {/*  */}
           </div>
         </div>
 
@@ -154,7 +153,6 @@ const DoctorPage = () => {
             <button className="confirm-booking" onClick={booking}>
               Confirm Appointment at {selectedTime}
             </button>
-
           )}
         </div>
       </div>

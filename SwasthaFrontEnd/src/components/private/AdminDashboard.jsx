@@ -24,8 +24,8 @@ const AdminDashboard = () => {
     dob: "",
     medicalID: "",
     address: "",
-    availableDays: [],
-    availableTime: [],
+    availableDays: "",
+    availableTime: "",
   });
 
   const handleAppointmentStatus = (id, status) => {
@@ -48,8 +48,12 @@ const AdminDashboard = () => {
         dob: newDoctor.dob,
         medicalID: newDoctor.medicalID,
         address: newDoctor.address,
-        availableDays: newDoctor.availableDays,
-        availableTime: newDoctor.availableTime,
+        availableDays: newDoctor.availableDays
+          .split(",")
+          .map((day) => day.trim()),
+        availableTime: newDoctor.availableTime
+          .split(",")
+          .map((time) => time.trim()),
         type: "doctor",
       };
       console.log("Request Data:", requestData);
@@ -57,7 +61,7 @@ const AdminDashboard = () => {
         "http://localhost:4000/doctor/addDoctor",
         requestData
       );
-      if (response.status === 200) {
+      if (response.status === 201 || response.status === 200) {
         console.log("Doctor Added Successful:", response.data.token);
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", response.data.user);
@@ -82,8 +86,8 @@ const AdminDashboard = () => {
       medicalID: "",
       address: "",
       experience: "",
-      availableDays: [],
-      availableTime: [],
+      availableDays: "",
+      availableTime: "",
       doctorImage: null,
     });
   };
@@ -127,6 +131,7 @@ const AdminDashboard = () => {
   };
 
   const deleteDoctor = async (doctorId) => {
+    console.log(doctorId);
     try {
       const response = await axios.delete(
         `http://localhost:4000/doctor/deleteDoctor/${doctorId}`
@@ -144,8 +149,10 @@ const AdminDashboard = () => {
   React.useEffect(() => {
     fetchAppointments();
     fetchAllDoctors();
-    deleteDoctor();
+    // deleteDoctor();
   }, []);
+
+  console.log(doctors);
 
   return (
     <div className="admin page">
@@ -233,7 +240,7 @@ const AdminDashboard = () => {
                       <td>{appt.User?.username || "N/A"}</td>
                       <td>{appt.User?.email || "N/A"}</td>
                       <td>{appt.date || "N/A"}</td>
-                      <td>{appt.Bookings?.starttime || "N/A"}</td>
+                      <td>{appt.startTime || "N/A"}</td>
                       <td>{appt.Doctor?.doctorName || "N/A"}</td>
                     </tr>
                   ))}
@@ -397,12 +404,9 @@ const AdminDashboard = () => {
                     name="availableDays"
                     value={newDoctor.availableDays}
                     onChange={(e) =>
-                      setNewDoctor({
+    setNewDoctor({
                         ...newDoctor,
-                        availableDays: e.target.value
-                          .split(",")
-                          .map((item) => item.trim())
-                          .filter((item) => item !== ""),
+                        availableDays: e.target.value,
                       })
                     }
                     required
@@ -419,9 +423,6 @@ const AdminDashboard = () => {
                       setNewDoctor({
                         ...newDoctor,
                         availableTime: e.target.value
-                          .split(",")
-                          .map((item) => item.trim())
-                          .filter((item) => item !== ""),
                       })
                     }
                     required
@@ -458,7 +459,7 @@ const AdminDashboard = () => {
                   Card View
                 </button>
               </div>
-
+              ...
               {viewMode === "table" ? (
                 <table>
                   <thead>
@@ -473,7 +474,7 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {doctors.map((doctor) => (
+                    {allDoctorDetail.map((doctor) => (
                       <tr key={doctor.id}>
                         <td>
                           {doctor.doctorImage && (
@@ -484,15 +485,15 @@ const AdminDashboard = () => {
                             />
                           )}
                         </td>
-                        <td>{doctor.name}</td>
+                        <td>{doctor.doctorName}</td>
                         <td>{doctor.speciality}</td>
-                        <td>{doctor.email}</td>
+                        <td>{doctor.doctorEmail}</td>
                         <td>{doctor.phone}</td>
                         <td>{doctor.experience}</td>
                         <td>{doctor.address}</td>
                         <td>
                           <button
-                            onClick={() => handleDeleteDoctor(doctor.id)}
+                            onClick={() => handleDeleteDoctor(doctorId)}
                             className="delete-btn"
                           >
                             Delete
@@ -504,14 +505,8 @@ const AdminDashboard = () => {
                 </table>
               ) : (
                 <div className="doctor-grid">
-                  {doctors.map((doctor) => (
-                    <div className="doctor-card" key={doctor.id}>
-                      <button
-                        onClick={() => handleDeleteDoctor(doctor.id)}
-                        className="delete-btn"
-                      >
-                        Delete
-                      </button>
+                  {allDoctorDetail.map((doctor) => (
+                    <div className="doctor-card" key={doctorId}>
                       {doctor.doctorImage && (
                         <img
                           src={doctor.doctorImage}
@@ -519,23 +514,21 @@ const AdminDashboard = () => {
                           className="doctor-image"
                         />
                       )}
-                      <h3>{allDoctorDetail?.doctorName}</h3>
+                      <h3>{doctor.doctorName}</h3>
                       <p>
-                        <strong>Specialty:</strong>{" "}
-                        {allDoctorDetail?.speciality}
+                        <strong>Specialty:</strong> {doctor.speciality}
                       </p>
                       <p>
-                        <strong>Experience:</strong>{" "}
-                        {allDoctorDetail?.experience}
+                        <strong>Experience:</strong> {doctor.experience}
                       </p>
                       <p>
-                        <strong>Address:</strong> {allDoctorDetail?.address}
+                        <strong>Address:</strong> {doctor.address}
                       </p>
                       <p>
-                        <strong>Email:</strong> {allDoctorDetail?.doctorEmail}
+                        <strong>Email:</strong> {doctor.doctorEmail}
                       </p>
                       <button
-                        onClick={() => handleDeleteDoctor(doctor.id)}
+                        onClick={() => deleteDoctor(doctorId)}
                         className="delete-btn"
                       >
                         Delete
@@ -544,6 +537,7 @@ const AdminDashboard = () => {
                   ))}
                 </div>
               )}
+              ...
             </div>
           )}
         </div>

@@ -59,7 +59,9 @@ const Home = () => {
           <section className="hero-section">
             <div className="hero-content">
               <h1>Book Appointment with Doctors</h1>
+              <Link to='/AllDoctors'>
               <button className="book-btn">Book Appointment</button>
+              </Link>
             </div>
             <img src={doctorgroup} alt="Doctor" className="hero-img" />
           </section>
@@ -96,7 +98,9 @@ const Home = () => {
             <img src={medicalteam} alt="Medical Team" className="banner-img" />
             <div className="banner-content">
               <p>Book appointment with our trusted doctors</p>
+              <Link to='/AllDoctors'>
               <button className="book-btn">Book Appointment</button>
+              </Link>
             </div>
           </section>
         </main>

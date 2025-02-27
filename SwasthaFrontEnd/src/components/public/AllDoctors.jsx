@@ -11,7 +11,7 @@ import axios from "axios";
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState("home");
-  const [selectedSpecialty, setSelectedSpecialty] = useState(null);
+  const [selectedSpeciality, setSelectedSpeciality] = useState("");
 
   const [doctorsList, setDoctorsList] = useState([]);
 
@@ -29,40 +29,42 @@ const Home = () => {
   const allDoctors = [
     {
       name: "Dr. Sarah Smith",
-      specialty: "Cardiology",
+      speciality: "Cardiology",
       img: doc1,
     },
     {
       name: "Dr. John Doe",
-      specialty: "Dermatology",
+      speciality: "Dermatology",
       img: doc2,
     },
     {
       name: "Dr. Emily Brown",
-      specialty: "Pediatrics",
+      speciality: "Pediatrics",
       img: doc3,
     },
     {
       name: "Dr. Michael Johnson",
-      specialty: "Orthopedics",
+      speciality: "Orthopedics",
       img: doc4,
     },
     {
       name: "Dr. Rachel Green",
-      specialty: "Neurology",
+      speciality: "Neurology",
       img: doc5,
     },
   ];
 
   const filteredDoctors =
-    selectedSpecialty === "All" || !selectedSpecialty
+    selectedSpeciality === "All" || !selectedSpeciality
       ? allDoctors
-      : allDoctors.filter((doctor) => doctor.specialty === selectedSpecialty);
+      : allDoctors.filter((doctor) => doctor.speciality === selectedSpeciality);
 
   React.useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/doctor/allDoctors");
+        const res = await axios.get(
+          `http://localhost:4000/doctor/allDoctors?speciality=${selectedSpeciality}`
+        );
         console.log(res, "res");
         setDoctorsList(res.data);
       } catch (err) {
@@ -70,9 +72,9 @@ const Home = () => {
       }
     };
     fetchDoctors();
-  }, []);
+  }, [selectedSpeciality]);
 
-  console.log(doctorsList);
+  console.log(selectedSpeciality, "sp");
 
   return (
     <div className="home-page">
@@ -85,29 +87,36 @@ const Home = () => {
         {/* Specialty Sidebar */}
         <nav className="specialty-sidebar">
           <h3>Specialties</h3>
-          {specialties.map((specialty) => (
+          {specialties.map((speciality) => (
             <button
-              key={specialty}
+              key={speciality}
               className={`specialty-btn ${
-                selectedSpecialty === specialty ? "active" : ""
+                selectedSpeciality === speciality ? "active" : ""
               }`}
               onClick={() =>
-                setSelectedSpecialty(specialty === "All" ? null : specialty)
+                setSelectedSpeciality(speciality === "All" ? "" : speciality)
               }
             >
-              {specialty}
+              {speciality}
             </button>
           ))}
         </nav>
 
         {/* Doctors Grid */}
         <main className="doctors-main">
-          <h2>{selectedSpecialty || "All Doctors"}</h2>
+          <h2>{selectedSpeciality || "All Doctors"}</h2>
           <div className="doctors-grid">
             {doctorsList?.map((doctor) => (
               <Link to={`/Doctors/${doctor.id}`}>
                 <div key={doctor.id} className="doctor-card">
-                  <img src={doctor?.doctorImage? doctor.doctorImage: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'} alt={doctor.name} />
+                  <img
+                    src={
+                      doctor?.doctorImage
+                        ? doctor.doctorImage
+                        : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                    }
+                    alt={doctor.name}
+                  />
                   <h3>{doctor.doctorName}</h3>
                   <p>{doctor.speciality}</p>
                 </div>

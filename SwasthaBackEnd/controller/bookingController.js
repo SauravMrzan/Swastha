@@ -1,4 +1,5 @@
 const Booking = require("../model/Booking");
+const Doctor = require("../model/Doctor");
 const User = require("../model/User");
 const { get } = require("../routes/bookingRoute");
 
@@ -24,10 +25,16 @@ const createBook = async (req, res) => {
 const getAllBook = async (req, res) => {
   try {
     const book = await Booking.findAll({
-      include: {
-        model: User, // Join with User table
-        attributes: ["id", "username", "email", "phone"], // Select specific fields
-      },
+      include: [
+        {
+          model: User, // Join with User table
+          attributes: ["id", "username", "email", "phone"], // Select specific fields
+        },
+        {
+          model: Doctor, // Join with Doctor table
+          attributes: ["id", "doctorName", "speciality", "experience"], // Select specific fields
+        },
+      ],
     });
 
     res.status(200).json(book);

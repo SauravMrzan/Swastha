@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../css/Navbar.css";
 import "../css/Home.css";
 import Menu from "./Dropdown";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useLocation } from "react-router-dom";
 
@@ -12,6 +12,15 @@ const Navbar = () => {
   console.log(location.pathname);
   
   const token = localStorage.getItem('token')
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    // Clear any stored user session if needed
+    console.log("Logging out...");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/Home"); // Redirect to landing page
+  };
+
 
   return (
     <nav className="header">
@@ -48,7 +57,7 @@ const Navbar = () => {
         </Link>
       </div>
       
-      {token? <button>Logout</button> : <Menu title="Create Account" />}
+      {token? <button onClick={handleLogout}>Logout</button> : <Menu title="Create Account" />}
     </nav>
   );
 };

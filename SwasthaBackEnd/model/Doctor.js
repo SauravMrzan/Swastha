@@ -49,6 +49,14 @@ const Doctor = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    availableDays: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true,
+    },
+    availableTime: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true,
+    },
     type: {
       type: DataTypes.STRING,
       allowNull: false,

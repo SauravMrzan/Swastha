@@ -1,27 +1,39 @@
-const { Sequelize,DataTypes} = require('sequelize');
-const { sequelize } = require('../database/db');
+const { Sequelize, DataTypes } = require("sequelize");
+const { sequelize } = require("../database/db");
+const User = require("./User");
+const Doctor = require("./Doctor");
 
-const Booking = sequelize.define('Booking',{
-    bookingId:{
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+const Booking = sequelize.define("Booking", {
+  bookingId: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "users",
+      key: "id",
     },
-    userId:{
-        type:DataTypes.INTEGER,
-        allowNull:false,
+  },
+  doctorId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "doctor",
+      key: "id",
     },
-    doctorId:{
-        type:DataTypes.INTEGER,
-        allowNull:false,
-    },
-    date:{
-        type:DataTypes.DATE,
-        allowNull:false
-    },
-    startTime:{
-        type:DataTypes.TIME,
-        allowNull: false,
-    }
+  },
+  date: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  startTime: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 });
+Booking.belongsTo(User, { foreignKey: "userId" });
+Booking.belongsTo(Doctor, { foreignKey: "doctorId" });
 module.exports = Booking;

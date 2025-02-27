@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import "../css/Doctors.css";
 import Navbar from "../public/Navbar";
 import doc1 from "../../assets/doc1.png";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const DoctorPage = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [formattedTimes, setFormattedTimes] = useState([]);
+  const { id } = useParams();
+  const [doctorInfo, setDoctorInfo] = useState({});
 
   // Sample available dates (next 7 days)
   const availableDates = Array.from({ length: 7 }, (_, i) => {
@@ -35,6 +41,47 @@ const DoctorPage = () => {
     image: doc1,
   };
 
+  React.useEffect(() => {
+    const fetchDoctorsById = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/doctor/viewDoctor/${id}`
+        );
+        // console.log(response.data);
+        setDoctorInfo(response?.data);
+
+        const times = response?.data?.availableTime?.map(
+          (time) => `${time}:00 ${time >= 12 ? "PM" : "AM"}`
+        );
+
+        setFormattedTimes(times);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchDoctorsById();
+  }, []);
+  // console.log(doctorsList, "doctorsList");
+
+  const userId = JSON.parse(localStorage.getItem("user")).id;
+  const booking = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/booking/addBook",
+        {
+          doctorId: id,
+          date: selectedDate,
+          startTime: selectedTime,
+          userId,
+        }
+      );
+      toast.success("Booking Successful");
+    } catch (error) {
+      console.error(error);
+      toast.error("Booking Failed");
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -42,16 +89,16 @@ const DoctorPage = () => {
         {/* Doctor Information Section */}
         <div className="doctor-info-section">
           <div className="doctor-image">
-            <img src={doctor.image} alt={doctor.name} />
+            <img src={doctorInfo?.doctorImage} alt={doctorInfo?.doctorName} />
           </div>
           <div className="doctor-details">
-            <h1>{doctor.name}</h1>
-            <p className="specialty">{doctor.specialty}</p>
-            <p className="degree">{doctor.degree}</p>
-            <p className="experience">{doctor.experience}</p>
+            <h1>{doctorInfo?.doctorName}</h1>
+            <p className="specialty">{doctorInfo?.speciality}</p>
+
+            <p className="experience">{doctorInfo?.experience}</p>
             <div className="about-section">
               <h3>About</h3>
-              <p>{doctor.about}</p>
+              <p>{doctorInfo?.about}</p>
             </div>
           </div>
         </div>
@@ -60,27 +107,35 @@ const DoctorPage = () => {
         <div className="booking-section">
           <h2>Available Slots</h2>
           <div className="date-selector">
-            {availableDates.map((date, index) => (
+            {doctorInfo?.availableDays?.map((day, index) => (
+              // <div
+              //   key={index}
+              //   className={`date-card ${
+              //     selectedDate === date ? "selected" : ""
+              //   }`}
+              //   onClick={() => setSelectedDate(date)}
+              // >
+              //   <div className="day">
+              //     {date.toLocaleDateString("en-US", { weekday: "short" })}
+              //   </div>
+              //   <div className="date">{date.getDate()}</div>
+              // </div>
               <div
-                key={index}
                 className={`date-card ${
-                  selectedDate === date ? "selected" : ""
+                  selectedDate === day ? "selected" : ""
                 }`}
-                onClick={() => setSelectedDate(date)}
+                onClick={() => setSelectedDate(day)}
               >
-                <div className="day">
-                  {date.toLocaleDateString("en-US", { weekday: "short" })}
-                </div>
-                <div className="date">{date.getDate()}</div>
+                {day}
               </div>
             ))}
           </div>
 
           {selectedDate && (
             <div className="time-slots">
-              <h3>Available Times for {selectedDate.toLocaleDateString()}</h3>
+              <h3>Available Times for {selectedDate}</h3>
               <div className="time-grid">
-                {timeSlots.map((time, index) => (
+                {formattedTimes.map((time, index) => (
                   <button
                     key={index}
                     className={`time-slot ${
@@ -96,9 +151,10 @@ const DoctorPage = () => {
           )}
 
           {selectedTime && (
-            <button className="confirm-booking">
+            <button className="confirm-booking" onClick={booking}>
               Confirm Appointment at {selectedTime}
             </button>
+
           )}
         </div>
       </div>

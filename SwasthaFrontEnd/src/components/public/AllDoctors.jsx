@@ -104,15 +104,15 @@ const Home = () => {
         <main className="doctors-main">
           <h2>{selectedSpecialty || "All Doctors"}</h2>
           <div className="doctors-grid">
-            <Link to="/Doctors">
-              {doctorsList?.map((doctor) => (
+            {doctorsList?.map((doctor) => (
+              <Link to={`/Doctors/${doctor.id}`}>
                 <div key={doctor.id} className="doctor-card">
-                  <img src={doctor.doctorImage} alt={doctor.name} />
+                  <img src={doctor?.doctorImage? doctor.doctorImage: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'} alt={doctor.name} />
                   <h3>{doctor.doctorName}</h3>
                   <p>{doctor.speciality}</p>
                 </div>
-              ))}
-            </Link>
+              </Link>
+            ))}
           </div>
         </main>
       </div>

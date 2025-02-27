@@ -5,6 +5,7 @@ const { sequelize, testConnection } = require("./database/db");
 const userRoute = require("./routes/userRoute");
 const doctorRoute = require("./routes/doctorRoute"); // Corrected the route path
 const adminRoute = require("./routes/adminRoute");
+const bookingRoute = require("./routes/bookingRoute");
 const User = require("./model/User"); // Import the User model
 const Doctor = require("./model/Doctor");
 const Admin = require("./model/Admin");
@@ -22,6 +23,7 @@ console.log("Initializing Server.................................");
 app.use("/users", userRoute);
 app.use("/doctor", doctorRoute); // Corrected the route path
 app.use("/admin", adminRoute);
+app.use("/booking", bookingRoute);
 
 async function startServer() {
   try {

@@ -5,25 +5,8 @@ import DocNavbar from "./DocNavbar";
 import axios from "axios";
 const DoctorAdmin = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      age: 35,
-      date: "2023-08-15",
-      time: "10:00 AM",
-      status: "pending",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      age: 28,
-      date: "2023-08-16",
-      time: "2:30 PM",
-      status: "accepted",
-    },
-    // Add more sample data
-  ]);
+  // const [bookings, setBookings] = useState([]);
+  const [appointments, setAppointments] = useState([]);
 
   const [doctorDetail, setDoctorDetail] = useState({});
 
@@ -37,7 +20,8 @@ const DoctorAdmin = () => {
     dob: "",
     medicalID: "",
     experience: "",
-    description: "",
+    availableDays: [],
+    availableTime: [],
   });
 
   const [editMode, setEditMode] = useState(false);
@@ -55,26 +39,29 @@ const DoctorAdmin = () => {
 
   const doctorId = JSON.parse(localStorage.getItem("doctor")).id;
 
+  console.log(profile);
+
   const fetchDoctors = async () => {
     try {
       const res = await axios.get(
         `http://localhost:4000/doctor/viewDoctor/${doctorId}`
       );
       if (res) {
-        console.log(res?.data?.doctorName);
+        console.log(res?.data);
         setDoctorDetail(res.data);
         setProfile((prevProfile) => ({
           ...prevProfile,
           doctorName: res?.data?.doctorName,
-          doctorEmail: res.data.doctorEmail || "",
-          speciality: res.data.speciality || "",
-          phone: res.data.phone || "",
-          address: res.data.address || "",
-          dob: res.data.dob || "",
-          medicalID: res.data.medicalID || "",
-          experience: res.data.experience || "",
-          description: res.data.description || "",
-          doctorImage: res.data.doctorImage || null,
+          doctorEmail: res?.data?.doctorEmail || "",
+          speciality: res?.data?.speciality || "",
+          phone: res?.data?.phone || "",
+          address: res?.data?.address || "",
+          dob: res?.data?.dob || "",
+          medicalID: res?.data?.medicalID || "",
+          experience: res?.data?.experience || "",
+          doctorImage: res?.data?.doctorImage || null,
+          availableDays: res?.data?.availableDays || [],
+          availableTime: res?.data?.availableTime || [],
         }));
       }
     } catch (err) {
@@ -82,15 +69,29 @@ const DoctorAdmin = () => {
     }
   };
 
+  const fetchAppointmentsById = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/booking/viewBookDoc/${doctorId}`
+      );
+      console.log(response.data);
+      setAppointments(response?.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   React.useEffect(() => {
     fetchDoctors();
+    fetchAppointmentsById();
   }, []);
 
   const handleDoctorEdit = async () => {
+    console.log("k xa");
     try {
       const res = await axios.put(
         `http://localhost:4000/doctor/updateDoctor/${doctorId}`,
-        { ...profile, file: doctorImage }
+        profile
       );
       if (res) fetchDoctors();
       console.log(res);
@@ -98,6 +99,8 @@ const DoctorAdmin = () => {
       console.log(error);
     }
   };
+
+  console.log(appointments);
 
   return (
     <div className="doctor-page">
@@ -129,13 +132,10 @@ const DoctorAdmin = () => {
             <div className="dashboard">
               <h2>Dashboard</h2>
               <div className="stats">
+                
                 <div className="stat-card">
-                  <h3>Total Patients</h3>
-                  <p>45</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Upcoming Appointments</h3>
-                  <p>12</p>
+                  <h3>Total Appointments</h3>
+                  <p>{appointments?.length || 0}</p>
                 </div>
               </div>
             </div>
@@ -148,43 +148,20 @@ const DoctorAdmin = () => {
                 <thead>
                   <tr>
                     <th>Patient Name</th>
-                    <th>Age</th>
-                    <th>Date</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Day</th>
                     <th>Time</th>
-                    <th>Status</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {appointments.map((appt) => (
                     <tr key={appt.id}>
-                      <td>{appt.name}</td>
-                      <td>{appt.age}</td>
+                      <td>{appt.User.username}</td>
+                      <td>{appt.User.email}</td>
+                      <td>{appt.User.phone}</td>
                       <td>{appt.date}</td>
-                      <td>{appt.time}</td>
-                      <td className={`status ${appt.status}`}>{appt.status}</td>
-                      <td>
-                        {appt.status === "pending" && (
-                          <>
-                            <button
-                              onClick={() =>
-                                handleAppointmentStatus(appt.id, "accepted")
-                              }
-                              className="accept"
-                            >
-                              Accept
-                            </button>
-                            <button
-                              onClick={() =>
-                                handleAppointmentStatus(appt.id, "rejected")
-                              }
-                              className="reject"
-                            >
-                              Reject
-                            </button>
-                          </>
-                        )}
-                      </td>
+                      <td>{appt.startTime}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -205,8 +182,8 @@ const DoctorAdmin = () => {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    setEditMode(false);
                     handleDoctorEdit();
+                    setEditMode(false);
                   }}
                 >
                   <div className="profile-img-upload">
@@ -254,7 +231,7 @@ const DoctorAdmin = () => {
                   <label>
                     Phone:
                     <input
-                      type="tel"
+                      type="text"
                       name="phone"
                       value={profile.phone}
                       onChange={handleProfileEdit}
@@ -291,21 +268,47 @@ const DoctorAdmin = () => {
                   <label>
                     Experience (years):
                     <input
-                      type="number"
+                      type="text"
                       name="experience"
                       value={profile.experience}
                       onChange={handleProfileEdit}
                     />
                   </label>
-
                   <label>
-                    Description:
-                    <textarea
-                      name="description"
-                      value={profile.description}
-                      onChange={handleProfileEdit}
+                    Available Days:
+                    <input
+                      type="text"
+                      name="availableDays"
+                      value={profile.availableDays}
+                      onChange={(e) =>
+                        setProfile({
+                          ...profile,
+                          availableDays: e.target.value
+                            .split(",")
+                            .map((item) => item.trim())
+                            .filter((item) => item !== ""),
+                        })
+                      }
                     />
                   </label>
+                  <label>
+                    Available Times:
+                    <input
+                      type="text"
+                      name="availableTime"
+                      value={profile.availableTime}
+                      onChange={(e) =>
+                        setProfile({
+                          ...profile,
+                          availableTime: e.target.value
+                            .split(",")
+                            .map((item) => item.trim())
+                            .filter((item) => item !== ""),
+                        })
+                      }
+                    />
+                  </label>
+
                   <button type="submit">Save Changes</button>
                 </form>
               ) : (
@@ -340,11 +343,12 @@ const DoctorAdmin = () => {
                     <strong>Address:</strong> {doctorDetail?.address || "N/A"}
                   </p>
                   <p>
-                    <strong>Date of Birth:</strong> {new Date(doctorDetail.dob).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }) || "N/A"}
+                    <strong>Date of Birth:</strong>{" "}
+                    {new Date(doctorDetail.dob).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }) || "N/A"}
                   </p>
                   <p>
                     <strong>License Number:</strong>{" "}
@@ -355,8 +359,12 @@ const DoctorAdmin = () => {
                     {doctorDetail?.experience || "N/A"} years
                   </p>
                   <p>
-                    <strong>Description:</strong>{" "}
-                    {doctorDetail?.description || "N/A"}
+                    <strong>Available Days:</strong>{" "}
+                    {doctorDetail?.availableDays?.join(", ") || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Available Times:</strong>{" "}
+                    {doctorDetail?.availableTime?.join(", ") || "N/A"}
                   </p>
                 </div>
               )}

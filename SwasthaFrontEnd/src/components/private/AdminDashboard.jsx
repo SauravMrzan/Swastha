@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import "../css/AdminDashboard.css";
 import Navbar from "../public/Navbar";
 import DocNavbar from "./DocNavbar";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [viewMode, setViewMode] = useState("table"); // For doctor list view
@@ -12,7 +15,7 @@ const AdminDashboard = () => {
       speciality: "Cardiology",
       email: "sarah@clinic.com",
       experience: "10 years",
-      
+
       description: "Senior Cardiologist",
       doctorImage: "",
     },
@@ -48,9 +51,42 @@ const AdminDashboard = () => {
       appointments.map((appt) => (appt.id === id ? { ...appt, status } : appt))
     );
   };
-
-  const handleAddDoctor = (e) => {
+  const navigate = useNavigate();
+  const handleAddDoctor = async (e) => {
     e.preventDefault();
+    console.log(newDoctor);
+    try {
+      const requestData = {
+        doctorName: newDoctor.doctorName,
+        speciality: newDoctor.speciality,
+        doctorEmail: newDoctor.doctorEmail,
+        phone: newDoctor.phone,
+        experience: newDoctor.experience,
+        description: newDoctor.description,
+        dob: newDoctor.dob,
+        medicalID: newDoctor.medicalID,
+        address: newDoctor.address,
+        type: "doctor",
+      };
+      console.log("Request Data:", requestData);
+      const response = await axios.post(
+        "http://localhost:4000/doctor/addDoctor",
+        requestData
+      );
+      if (response.status === 200) {
+        console.log("Doctor Added Successful:", response.data.token);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", response.data.user);
+        toast.success("Doctor Successful");
+      } else {
+        console.error("Add Doctor failed:", response.data.error);
+        // setErrors({ general: response.data.error });
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      toast.error("Doctor Failed");
+    }
+
     const doctorWithId = { ...newDoctor, id: doctors.length + 1 };
     setDoctors([...doctors, doctorWithId]);
     setNewDoctor({
@@ -75,6 +111,21 @@ const AdminDashboard = () => {
   const handleDeleteDoctor = (doctorId) => {
     setDoctors(doctors.filter((doctor) => doctor.id !== doctorId));
   };
+
+  const fetchAppointments = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:4000/booking/viewBook"
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchAppointments();
+  }, []);
 
   return (
     <div className="admin page">
@@ -229,24 +280,24 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Specialty</label>
-                  <input
-                    type="text"
-                    value={newDoctor.speciality}
-                    onChange={(e) =>
-                      setNewDoctor({ ...newDoctor, speciality: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
                   <label>Email</label>
                   <input
                     type="email"
                     value={newDoctor.email}
                     onChange={(e) =>
                       setNewDoctor({ ...newDoctor, email: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    value={newDoctor.password}
+                    onChange={(e) =>
+                      setNewDoctor({ ...newDoctor, password: e.target.value })
                     }
                     required
                   />
@@ -353,7 +404,14 @@ const AdminDashboard = () => {
                   />
                 </div>
 
-                <button type="submit" className="submit-btn">
+                <button
+                  type="submit"
+                  className="submit-btn"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleAddDoctor();
+                  }}
+                >
                   Add Doctor
                 </button>
               </form>

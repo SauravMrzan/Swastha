@@ -104,8 +104,10 @@ const createDoctor = async (req, res) => {
       address,
       experience,
       medicalID,
-      description,
+      availableDays,
+      availableTime,
       dob,
+      type,
     } = req.body;
     const doctorImage = req.file ? req.file.filename : null;
 
@@ -119,7 +121,8 @@ const createDoctor = async (req, res) => {
       doctorImage,
       dob,
       experience,
-      description,
+      availableDays,
+      availableTime,
       type,
     });
 
@@ -160,7 +163,17 @@ const getDoctorById = async (req, res) => {
 const updateDoctor = async (req, res) => {
   try {
     const { id } = req.params;
-    const { doctorName, doctorEmail, phone, speciality, medicalID,experience,description } = req.body;
+    const {
+      doctorName,
+      doctorEmail,
+      phone,
+      speciality,
+      medicalID,
+      experience,
+      
+      availableDays,
+      availableTime,
+    } = req.body;
     const doctor = await Doctor.findByPk(id);
 
     if (!doctor) {
@@ -188,7 +201,8 @@ const updateDoctor = async (req, res) => {
       medicalID,
       doctorImage,
       experience,
-      description,
+      availableDays,
+      availableTime,
     });
 
     res.status(200).json(doctor);

@@ -70,8 +70,8 @@ const DoctorSignup = () => {
         email: loginEmail,
         password: loginPassword,
       });
-      localStorage.setItem('token', res?.data?.token)
-      localStorage.setItem('doctor', JSON.stringify(res?.data?.Doctor))
+      localStorage.setItem("token", res?.data?.token);
+      localStorage.setItem("doctor", JSON.stringify(res?.data?.Doctor));
       console.log(res);
       navigate("/DoctorDash");
     } catch (error) {
@@ -101,7 +101,7 @@ const DoctorSignup = () => {
           </button>
         </div>
 
-        <form onSubmit={isLogin? handleLoginSubmit: handleSignupSubmit}>
+        <form onSubmit={isLogin ? handleLoginSubmit : handleSignupSubmit}>
           {!isLogin && (
             <>
               <div className="input-group">
@@ -164,30 +164,53 @@ const DoctorSignup = () => {
                   required
                 />
               </div>
+              <div className="input-group">
+                <input
+                  type="text"
+                  name="doctorEmail"
+                  placeholder="Email"
+                  value={formData.doctorEmail}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <input
+                  type="text"
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </>
           )}
 
-          <div className="input-group">
-            <input
-              type="email"
-              // name="email"
-              placeholder="Email"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <input
-              type="password"
-              // name="password"
-              placeholder="Password"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-              required
-            />
-          </div>
+          {isLogin && (
+            <>
+              <div className="input-group">
+                <input
+                  type="email"
+                  // name="email"
+                  placeholder="Email"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <input
+                  type="password"
+                  // name="password"
+                  placeholder="Password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                />
+              </div>
+            </>
+          )}
 
           {!isLogin && (
             <div className="input-group">

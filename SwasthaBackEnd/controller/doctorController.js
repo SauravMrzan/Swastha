@@ -100,6 +100,7 @@ const createDoctor = async (req, res) => {
       doctorName,
       speciality,
       doctorEmail,
+      password,
       phone,
       address,
       experience,
@@ -115,6 +116,7 @@ const createDoctor = async (req, res) => {
       doctorName,
       speciality,
       doctorEmail,
+      password,
       phone,
       address,
       medicalID,
@@ -170,7 +172,7 @@ const updateDoctor = async (req, res) => {
       speciality,
       medicalID,
       experience,
-      
+
       availableDays,
       availableTime,
     } = req.body;

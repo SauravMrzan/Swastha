@@ -8,42 +8,24 @@ import { toast } from "react-toastify";
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [viewMode, setViewMode] = useState("table"); // For doctor list view
-  const [doctors, setDoctors] = useState([
-    {
-      id: 1,
-      name: "Dr. Sarah Johnson",
-      speciality: "Cardiology",
-      email: "sarah@clinic.com",
-      experience: "10 years",
+  const [doctors, setDoctors] = useState([]);
 
-      description: "Senior Cardiologist",
-      doctorImage: "",
-    },
-  ]);
-
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      patientName: "John Doe",
-      age: 35,
-      date: "2023-08-15",
-      time: "10:00 AM",
-      doctor: "Dr. Sarah Johnson",
-      status: "pending",
-    },
-  ]);
+  const [appointments, setAppointments] = useState([]);
+  const [allDoctorDetail, setAllDoctorDetail] = useState([]);
 
   const [newDoctor, setNewDoctor] = useState({
     doctorName: "",
     speciality: "",
     doctorEmail: "",
+    password: "",
     phone: "",
     experience: "",
-    description: "",
     doctorImage: null,
     dob: "",
     medicalID: "",
     address: "",
+    availableDays: [],
+    availableTime: [],
   });
 
   const handleAppointmentStatus = (id, status) => {
@@ -60,12 +42,14 @@ const AdminDashboard = () => {
         doctorName: newDoctor.doctorName,
         speciality: newDoctor.speciality,
         doctorEmail: newDoctor.doctorEmail,
+        password: newDoctor.password,
         phone: newDoctor.phone,
         experience: newDoctor.experience,
-        description: newDoctor.description,
         dob: newDoctor.dob,
         medicalID: newDoctor.medicalID,
         address: newDoctor.address,
+        availableDays: newDoctor.availableDays,
+        availableTime: newDoctor.availableTime,
         type: "doctor",
       };
       console.log("Request Data:", requestData);
@@ -93,13 +77,18 @@ const AdminDashboard = () => {
       doctorName: "",
       speciality: "",
       doctorEmail: "",
+      password: "",
       phone: "",
+      medicalID: "",
       address: "",
       experience: "",
-      description: "",
+      availableDays: [],
+      availableTime: [],
       doctorImage: null,
     });
   };
+
+  const doctorId = JSON.parse(localStorage.getItem("doctor")).id;
 
   const handleFileChange = (e) => {
     setNewDoctor({
@@ -117,14 +106,45 @@ const AdminDashboard = () => {
       const response = await axios.get(
         "http://localhost:4000/booking/viewBook"
       );
+      if (response.status === 200) {
+        console.log("Appointments:", response.data);
+        setAppointments(response.data); // Update state with fetched appointments
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const fetchAllDoctors = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:4000/doctor/allDoctors"
+      );
       console.log(response.data);
+      setAllDoctorDetail(response.data);
     } catch (error) {
       console.error(error);
     }
   };
 
+  const deleteDoctor = async (doctorId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:4000/doctor/deleteDoctor/${doctorId}`
+      );
+      if (response.status === 200) {
+        console.log("Doctor Deleted:", response.data);
+        toast.success("Doctor Deleted Successfully");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Doctor Deletion Failed");
+    }
+  };
+
   React.useEffect(() => {
     fetchAppointments();
+    fetchAllDoctors();
+    deleteDoctor();
   }, []);
 
   return (
@@ -165,11 +185,11 @@ const AdminDashboard = () => {
               <div className="stats-grid">
                 <div className="stat-card">
                   <h3>Total Doctors</h3>
-                  <p>{doctors.length}</p>
+                  <p>{doctors?.length || 0}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Total Appointments</h3>
-                  <p>{appointments.length}</p>
+                  <p>{appointments?.length || 0}</p>
                 </div>
                 <div className="stat-card">
                   <h3>Total Patients</h3>
@@ -182,7 +202,7 @@ const AdminDashboard = () => {
                 <ul>
                   {appointments.slice(-5).map((appt) => (
                     <li key={appt.id}>
-                      <span>{appt.patientName}</span>
+                      <span>{appt.username}</span>
                       <span>{appt.doctor}</span>
                       <span>
                         {appt.date} {appt.time}
@@ -201,45 +221,20 @@ const AdminDashboard = () => {
                 <thead>
                   <tr>
                     <th>Patient Name</th>
-                    <th>Age</th>
-                    <th>Date</th>
+                    <th>Patient Email</th>
+                    <th>Day</th>
                     <th>Time</th>
                     <th>Doctor</th>
-                    <th>Status</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {appointments.map((appt) => (
                     <tr key={appt.id}>
-                      <td>{appt.patientName}</td>
-                      <td>{appt.age}</td>
-                      <td>{appt.date}</td>
-                      <td>{appt.time}</td>
-                      <td>{appt.doctor}</td>
-                      <td className={`status ${appt.status}`}>{appt.status}</td>
-                      <td>
-                        {appt.status === "pending" && (
-                          <>
-                            <button
-                              onClick={() =>
-                                handleAppointmentStatus(appt.id, "accepted")
-                              }
-                              className="accept"
-                            >
-                              Accept
-                            </button>
-                            <button
-                              onClick={() =>
-                                handleAppointmentStatus(appt.id, "rejected")
-                              }
-                              className="reject"
-                            >
-                              Reject
-                            </button>
-                          </>
-                        )}
-                      </td>
+                      <td>{appt.User?.username || "N/A"}</td>
+                      <td>{appt.User?.email || "N/A"}</td>
+                      <td>{appt.date || "N/A"}</td>
+                      <td>{appt.Bookings?.starttime || "N/A"}</td>
+                      <td>{appt.Doctor?.doctorName || "N/A"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -271,9 +266,10 @@ const AdminDashboard = () => {
                   <label>Full Name</label>
                   <input
                     type="text"
-                    value={newDoctor.name}
+                    name="doctorName"
+                    value={newDoctor.doctorName}
                     onChange={(e) =>
-                      setNewDoctor({ ...newDoctor, name: e.target.value })
+                      setNewDoctor({ ...newDoctor, doctorName: e.target.value })
                     }
                     required
                   />
@@ -283,9 +279,13 @@ const AdminDashboard = () => {
                   <label>Email</label>
                   <input
                     type="email"
-                    value={newDoctor.email}
+                    name="doctorEmail"
+                    value={newDoctor.doctorEmail}
                     onChange={(e) =>
-                      setNewDoctor({ ...newDoctor, email: e.target.value })
+                      setNewDoctor({
+                        ...newDoctor,
+                        doctorEmail: e.target.value,
+                      })
                     }
                     required
                   />
@@ -391,13 +391,37 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Description</label>
-                  <textarea
-                    value={newDoctor.description}
+                  <label>Available Days</label>
+                  <input
+                    type="text"
+                    name="availableDays"
+                    value={newDoctor.availableDays}
                     onChange={(e) =>
                       setNewDoctor({
                         ...newDoctor,
-                        description: e.target.value,
+                        availableDays: e.target.value
+                          .split(",")
+                          .map((item) => item.trim())
+                          .filter((item) => item !== ""),
+                      })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Available Time</label>
+                  <input
+                    type="text"
+                    name="availableTime"
+                    value={newDoctor.availableTime}
+                    onChange={(e) =>
+                      setNewDoctor({
+                        ...newDoctor,
+                        availableTime: e.target.value
+                          .split(",")
+                          .map((item) => item.trim())
+                          .filter((item) => item !== ""),
                       })
                     }
                     required
@@ -440,13 +464,12 @@ const AdminDashboard = () => {
                   <thead>
                     <tr>
                       <th>Profile</th>
-                      <th>Name</th>
+                      <th>Doctor Name</th>
                       <th>Specialty</th>
                       <th>Email</th>
                       <th>Phone</th>
                       <th>Experience</th>
                       <th>Address</th>
-                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -492,22 +515,24 @@ const AdminDashboard = () => {
                       {doctor.doctorImage && (
                         <img
                           src={doctor.doctorImage}
-                          alt={doctor.name}
+                          alt={doctor.doctorName}
                           className="doctor-image"
                         />
                       )}
-                      <h3>{doctor.name}</h3>
+                      <h3>{allDoctorDetail?.doctorName}</h3>
                       <p>
-                        <strong>Specialty:</strong> {doctor.speciality}
+                        <strong>Specialty:</strong>{" "}
+                        {allDoctorDetail?.speciality}
                       </p>
                       <p>
-                        <strong>Experience:</strong> {doctor.experience}
+                        <strong>Experience:</strong>{" "}
+                        {allDoctorDetail?.experience}
                       </p>
                       <p>
-                        <strong>Address:</strong> {doctor.address}
+                        <strong>Address:</strong> {allDoctorDetail?.address}
                       </p>
                       <p>
-                        <strong>Email:</strong> {doctor.email}
+                        <strong>Email:</strong> {allDoctorDetail?.doctorEmail}
                       </p>
                       <button
                         onClick={() => handleDeleteDoctor(doctor.id)}

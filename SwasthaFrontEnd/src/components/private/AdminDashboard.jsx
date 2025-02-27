@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import "../css/AdminDashboard.css";
-import Navbar from "../public/Navbar";
-import DocNavbar from "./DocNavbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import AdminNavbar from "./AdminNavbar";
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [viewMode, setViewMode] = useState("table"); // For doctor list view
@@ -156,7 +155,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin page">
-      <DocNavbar />
+      <AdminNavbar />
       <div className="admin-container">
         <nav className="admin-nav">
           <button
@@ -209,8 +208,8 @@ const AdminDashboard = () => {
                 <ul>
                   {appointments.slice(-5).map((appt) => (
                     <li key={appt.id}>
-                      <span>{appt.username}</span>
-                      <span>{appt.doctor}</span>
+                      <span>{appt.User?.username}</span>
+                      <span>{appt.Doctor?.doctorName}</span>
                       <span>
                         {appt.date} {appt.time}
                       </span>
@@ -362,10 +361,11 @@ const AdminDashboard = () => {
                     required
                   >
                     <option value="">Select Specialty</option>
-                    <option value="Cardiologist">Cardiologist</option>
-                    <option value="Dermatologist">Dermatologist</option>
-                    <option value="Pediatrician">Pediatrician</option>
-                    <option value="Orthopedist">Orthopedist</option>
+                    <option value="Cardiology">Cardiology</option>
+                    <option value="Dermatology">Dermatology</option>
+                    <option value="Pediatrics">Pediatrics</option>
+                    <option value="Orthopedics">Orthopedics</option>
+                    <option value="Neurology">Neurology</option>
                     <option value="General Medicine">General Medicine</option>
                   </select>
                 </div>
@@ -404,7 +404,7 @@ const AdminDashboard = () => {
                     name="availableDays"
                     value={newDoctor.availableDays}
                     onChange={(e) =>
-    setNewDoctor({
+                      setNewDoctor({
                         ...newDoctor,
                         availableDays: e.target.value,
                       })
@@ -422,7 +422,7 @@ const AdminDashboard = () => {
                     onChange={(e) =>
                       setNewDoctor({
                         ...newDoctor,
-                        availableTime: e.target.value
+                        availableTime: e.target.value,
                       })
                     }
                     required

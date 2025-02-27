@@ -66,5 +66,6 @@ const Doctor = sequelize.define(
     tableName: "doctor",
     timestamps: false,
   }
+  
 );
 module.exports = Doctor;

@@ -3,6 +3,7 @@ import "../css/DoctorSignup.css";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 const DoctorSignup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -19,7 +20,9 @@ const DoctorSignup = () => {
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-
+  
+    const [signPasswordVisible, setSignPasswordVisible] = useState(false);
+const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const specialties = [
     "Cardiology",
     "Dermatology",
@@ -208,6 +211,18 @@ const DoctorSignup = () => {
                   onChange={(e) => setLoginPassword(e.target.value)}
                   required
                 />
+                {signPasswordVisible ? (
+                              <FaRegEye
+                                className="hide"
+                                onClick={() => setSignPasswordVisible(!signPasswordVisible)}
+                              />
+                            ) : (
+                              <FaRegEyeSlash
+                                className="hide"
+                                onClick={() => setSignPasswordVisible(!signPasswordVisible)}
+                              />
+                            )}
+                
               </div>
             </>
           )}
@@ -222,6 +237,21 @@ const DoctorSignup = () => {
                 onChange={handleChange}
                 required
               />
+              {confirmPasswordVisible ? (
+                            <FaRegEye
+                              className="hide"
+                              onClick={() =>
+                                setConfirmPasswordVisible(!confirmPasswordVisible)
+                              }
+                            />
+                          ) : (
+                            <FaRegEyeSlash
+                              className="hide"
+                              onClick={() =>
+                                setConfirmPasswordVisible(!confirmPasswordVisible)
+                              }
+                            />
+                          )}
             </div>
           )}
 

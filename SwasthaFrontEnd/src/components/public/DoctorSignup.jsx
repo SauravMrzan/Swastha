@@ -20,9 +20,9 @@ const DoctorSignup = () => {
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  
-    const [signPasswordVisible, setSignPasswordVisible] = useState(false);
-const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
+  const [signPasswordVisible, setSignPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const specialties = [
     "Cardiology",
     "Dermatology",
@@ -204,7 +204,7 @@ const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
               </div>
               <div className="input-group">
                 <input
-                  type="password"
+                  type={signPasswordVisible ? "text" : "password"}
                   // name="password"
                   placeholder="Password"
                   value={loginPassword}
@@ -212,17 +212,16 @@ const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
                   required
                 />
                 {signPasswordVisible ? (
-                              <FaRegEye
-                                className="hide"
-                                onClick={() => setSignPasswordVisible(!signPasswordVisible)}
-                              />
-                            ) : (
-                              <FaRegEyeSlash
-                                className="hide"
-                                onClick={() => setSignPasswordVisible(!signPasswordVisible)}
-                              />
-                            )}
-                
+                  <FaRegEye
+                    className="hide"
+                    onClick={() => setSignPasswordVisible(!signPasswordVisible)}
+                  />
+                ) : (
+                  <FaRegEyeSlash
+                    className="hide"
+                    onClick={() => setSignPasswordVisible(!signPasswordVisible)}
+                  />
+                )}
               </div>
             </>
           )}
@@ -230,7 +229,7 @@ const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
           {!isLogin && (
             <div className="input-group">
               <input
-                type="password"
+                type={confirmPasswordVisible ? "text" : "password"}
                 name="confirmPassword"
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
@@ -238,20 +237,20 @@ const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
                 required
               />
               {confirmPasswordVisible ? (
-                            <FaRegEye
-                              className="hide"
-                              onClick={() =>
-                                setConfirmPasswordVisible(!confirmPasswordVisible)
-                              }
-                            />
-                          ) : (
-                            <FaRegEyeSlash
-                              className="hide"
-                              onClick={() =>
-                                setConfirmPasswordVisible(!confirmPasswordVisible)
-                              }
-                            />
-                          )}
+                <FaRegEye
+                  className="hide"
+                  onClick={() =>
+                    setConfirmPasswordVisible(!confirmPasswordVisible)
+                  }
+                />
+              ) : (
+                <FaRegEyeSlash
+                  className="hide"
+                  onClick={() =>
+                    setConfirmPasswordVisible(!confirmPasswordVisible)
+                  }
+                />
+              )}
             </div>
           )}
 

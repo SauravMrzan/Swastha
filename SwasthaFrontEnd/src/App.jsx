@@ -10,11 +10,11 @@ import {
 } from "react-router-dom";
 import UserProtectedRoute from "./components/Routes/UserProtectedRoute";
 import DoctorProtectedRoute from "./components/Routes/DoctorProtectedRoute";
+import AdminProtectedRoute from "./components/Routes/AdminProtectedRoute";
 // import Footer from "./components/public/Footer";
 // import Navbar from './components/public/Navbar';
 
 const Signup = React.lazy(() => import("./components/public/Signup"));
-const Auth = React.lazy(() => import("./components/public/authentication"));
 const About = React.lazy(() => import("./components/public/About"));
 const AdminDash = React.lazy(() =>
   import("./components/private/AdminDashboard")
@@ -62,7 +62,11 @@ function App() {
           <Route element={<DoctorProtectedRoute />}>
             <Route path="/DoctorDash" element={<DoctorDash />} />
           </Route>
+          <Route element={<AdminProtectedRoute />}>
+            <Route path="/DoctorDash" element={<AdminDash />} />
+          </Route>
         </Routes>
+        
         {/* <Footer/> */}
       </Suspense>
     </Router>

@@ -33,6 +33,13 @@ const Menu = ({ title }) => {
               </a>
             </Link>
           </div>
+          <div className="submenu-item">
+            <Link to="/AdminSign">
+              <a href="#" className="submenu-link">
+                Admin
+              </a>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

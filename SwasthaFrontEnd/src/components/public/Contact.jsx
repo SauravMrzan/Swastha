@@ -28,7 +28,7 @@ const ContactPage = () => {
                   <br />
                   Health City, HC 45678
                   <br />
-                  United States
+                  Nepal
                 </p>
               </div>
             </div>
@@ -37,8 +37,8 @@ const ContactPage = () => {
               <i className="fas fa-phone"></i>
               <div>
                 <h3>Phone</h3>
-                <p>+1 (234) 567-8900</p>
-                <p>Emergency: +1 (234) 567-8901</p>
+                <p>+977 980-0008900</p>
+                <p>Emergency: +977 980-8000901</p>
               </div>
             </div>
 

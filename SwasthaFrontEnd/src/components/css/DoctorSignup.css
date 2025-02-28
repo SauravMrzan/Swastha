@@ -11,7 +11,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, var(--primary), #a363d9);
+  background: url("../../assets/signback.png") no-repeat center center/cover;
   padding: 20px;
 }
 
@@ -224,6 +224,13 @@ input::placeholder {
   border-radius: 15px;
   backdrop-filter: blur(10px);
   justify-content: center;
+}
+.hide {
+  color: #333;
+  position: absolute;
+  right: 10%;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* Keep previous responsive styles and other effects */

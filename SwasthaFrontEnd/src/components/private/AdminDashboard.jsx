@@ -34,6 +34,7 @@ const AdminDashboard = () => {
   const [viewMode, setViewMode] = useState("table");
   const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
+  const [users, setUser] = useState([]);
   const [allDoctorDetail, setAllDoctorDetail] = useState([]);
   const [newDoctor, setNewDoctor] = useState({
     doctorName: "",
@@ -136,6 +137,16 @@ const AdminDashboard = () => {
       toast.error("Failed to fetch appointments");
     }
   };
+  const fetchAllUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/users/getUsers");
+      console.log(response.data);
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      toast.error("Failed to fetch users");
+    }
+  };
 
   const fetchAllDoctors = async () => {
     try {
@@ -171,6 +182,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     fetchAppointments();
     fetchAllDoctors();
+    fetchAllUsers();
   }, []);
 
   return (
@@ -212,7 +224,7 @@ const AdminDashboard = () => {
                 <div className="stats-grid">
                   <div className="stat-card">
                     <h3>Total Doctors</h3>
-                    <p>{doctors.length || 0}</p>
+                    <p>{allDoctorDetail.length || 0}</p>
                   </div>
                   <div className="stat-card">
                     <h3>Total Appointments</h3>
@@ -220,7 +232,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="stat-card">
                     <h3>Total Patients</h3>
-                    <p>45</p>
+                    <p>{users.length || 4}</p>
                   </div>
                 </div>
 

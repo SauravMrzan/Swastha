@@ -16,6 +16,7 @@ import doc3 from "../../assets/doc3.png";
 
 import doctorgroup from "../../assets/doctorgroup.png";
 const Home = () => {
+  debugger;
   const [activeTab, setActiveTab] = useState("home");
 
   const specialties = [
@@ -59,8 +60,8 @@ const Home = () => {
           <section className="hero-section">
             <div className="hero-content">
               <h1>Book Appointment with Doctors</h1>
-              <Link to='/AllDoctors'>
-              <button className="book-btn">Book Appointment</button>
+              <Link to="/AllDoctors">
+                <button className="book-btn">Book Appointment</button>
               </Link>
             </div>
             <img src={doctorgroup} alt="Doctor" className="hero-img" />
@@ -98,8 +99,8 @@ const Home = () => {
             <img src={medicalteam} alt="Medical Team" className="banner-img" />
             <div className="banner-content">
               <p>Book appointment with our trusted doctors</p>
-              <Link to='/AllDoctors'>
-              <button className="book-btn">Book Appointment</button>
+              <Link to="/AllDoctors">
+                <button className="book-btn">Book Appointment</button>
               </Link>
             </div>
           </section>

@@ -1,18 +1,9 @@
-import { useState } from "react";
 import React from "react";
 import { Suspense } from "react";
-// import "./App.css";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import UserProtectedRoute from "./components/Routes/UserProtectedRoute";
 import DoctorProtectedRoute from "./components/Routes/DoctorProtectedRoute";
 import AdminProtectedRoute from "./components/Routes/AdminProtectedRoute";
-// import Footer from "./components/public/Footer";
-// import Navbar from './components/public/Navbar';
 
 const Signup = React.lazy(() => import("./components/public/Signup"));
 const About = React.lazy(() => import("./components/public/About"));
@@ -38,7 +29,6 @@ function App() {
   return (
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
-        {/* <Navbar/> */}
         <Routes>
           <Route path="/" element={<Signup />} />
           <Route path="/Signup" element={<Signup />} />
@@ -63,11 +53,9 @@ function App() {
             <Route path="/DoctorDash" element={<DoctorDash />} />
           </Route>
           <Route element={<AdminProtectedRoute />}>
-            <Route path="/DoctorDash" element={<AdminDash />} />
+            <Route path="/AdminDash" element={<AdminDash />} />
           </Route>
         </Routes>
-        
-        {/* <Footer/> */}
       </Suspense>
     </Router>
   );

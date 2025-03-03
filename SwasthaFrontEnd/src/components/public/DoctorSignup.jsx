@@ -69,16 +69,19 @@ const DoctorSignup = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:4000/doctor/docLogin", {
+      const payload = {
         email: loginEmail,
         password: loginPassword,
-      });
+      };
+      console.log("Payload:", payload); // Log the payload
+      const res = await axios.post("http://localhost:4000/doctor/docLogin", payload);
       localStorage.setItem("token", res?.data?.token);
       localStorage.setItem("doctor", JSON.stringify(res?.data?.Doctor));
       console.log(res);
       navigate("/DoctorDash");
     } catch (error) {
-      console.log(error);
+      console.log("Error Response:", error.response); // Log the error response
+      toast.error("Login Failed: " + (error.response?.data?.message || "Invalid credentials"));
     }
   };
 

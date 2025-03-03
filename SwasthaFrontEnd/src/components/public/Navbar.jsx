@@ -1,26 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import "../css/Navbar.css";
 import "../css/Home.css";
 import Menu from "./Dropdown";
-import { Link, useNavigate } from "react-router-dom";
-
-import { useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation();
-
-  console.log(location.pathname);
-  
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
+
   const handleLogout = () => {
-    // Clear any stored user session if needed
     console.log("Logging out...");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/Home"); // Redirect to landing page
   };
-
 
   return (
     <nav className="header">
@@ -29,35 +23,39 @@ const Navbar = () => {
       <div className="nav-t">
         <Link
           to="/Home"
-          className={`${location?.pathname === "/Home" ? "active-tabs" : ""}`}
+          className={`${location.pathname === "/Home" ? "active-tabs" : ""}`}
         >
-          <a href="">Home</a>
+          Home
         </Link>
         <Link
           to="/AllDoctors"
           className={`${
-            location?.pathname === "/AllDoctors" ? "active-tabs" : ""
+            location.pathname === "/AllDoctors" ? "active-tabs" : ""
           }`}
         >
-          <a href="">All Doctors</a>
+          All Doctors
         </Link>
         <Link
           to="/About"
-          className={`${location?.pathname === "/About" ? "active-tabs" : ""}`}
+          className={`${location.pathname === "/About" ? "active-tabs" : ""}`}
         >
-          <a href="">About</a>
+          About
         </Link>
         <Link
           to="/Contact"
-          className={`${
-            location?.pathname === "/Contact" ? "active-tabs" : ""
-          }`}
+          className={`${location.pathname === "/Contact" ? "active-tabs" : ""}`}
         >
-          <a href="">Contact</a>
+          Contact
         </Link>
       </div>
-      
-      {token? <button className= "logout-btn" onClick={handleLogout}>Logout</button> : <Menu title="Create Account" />}
+
+      {token ? (
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
+      ) : (
+        <Menu title="Create Account" />
+      )}
     </nav>
   );
 };

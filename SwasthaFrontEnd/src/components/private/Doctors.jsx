@@ -18,7 +18,13 @@ const DoctorPage = () => {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUserId(JSON.parse(storedUser)?.id);
+      try {
+        const user = JSON.parse(storedUser);
+        setUserId(user?.id);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        toast.error("Failed to load user data.");
+      }
     }
   }, []);
 
@@ -29,10 +35,10 @@ const DoctorPage = () => {
         const response = await axios.get(
           `http://localhost:4000/doctor/viewDoctor/${id}`
         );
-        setDoctorInfo(response?.data);
+        setDoctorInfo(response.data);
 
         // Format available time
-        const times = response?.data?.availableTime?.map(
+        const times = response.data?.availableTime?.map(
           (time) => `${time}:00 ${time >= 12 ? "PM" : "AM"}`
         );
         setFormattedTimes(times);
@@ -48,7 +54,7 @@ const DoctorPage = () => {
   // Handle booking
   const booking = async () => {
     if (!userId) {
-      toast.error("User not found. Please log in first.");
+      toast.error("User  not found. Please log in first.");
       return;
     }
 
@@ -79,13 +85,21 @@ const DoctorPage = () => {
         {/* Doctor Information Section */}
         <div className="doctor-info-section">
           <div className="doctor-image">
-            <img src={doctorInfo?.doctorImage || doc1} alt={doctorInfo?.doctorName || "Doctor"} />
+            <img
+              src={doctorInfo?.doctorImage || doc1}
+              alt={doctorInfo?.doctorName || "Doctor"}
+            />
           </div>
           <div className="doctor-details">
             <h1>{doctorInfo?.doctorName || "Doctor Name"}</h1>
-            <p className="specialty">{doctorInfo?.speciality || "Speciality"}</p>
+            <p className="specialty">
+              {doctorInfo?.speciality || "Speciality"}
+            </p>
             <p className="experience">
-              Experience: {doctorInfo?.experience ? `${doctorInfo?.experience} years` : "N/A"}
+              Experience:{" "}
+              {doctorInfo?.experience
+                ? `${doctorInfo?.experience} years`
+                : "N/A"}
             </p>
           </div>
         </div>
@@ -98,7 +112,9 @@ const DoctorPage = () => {
               doctorInfo.availableDays.map((day, index) => (
                 <div
                   key={index}
-                  className={`date-card ${selectedDate === day ? "selected" : ""}`}
+                  className={`date-card ${
+                    selectedDate === day ? "selected" : ""
+                  }`}
                   onClick={() => setSelectedDate(day)}
                 >
                   {day}
@@ -116,7 +132,9 @@ const DoctorPage = () => {
                 {formattedTimes.map((time, index) => (
                   <button
                     key={index}
-                    className={`time-slot ${selectedTime === time ? "selected" : ""}`}
+                    className={`time-slot ${
+                      selectedTime === time ? "selected" : ""
+                    }`}
                     onClick={() => setSelectedTime(time)}
                   >
                     {time}

@@ -19,7 +19,6 @@ const Signup = ({ setToken }) => {
   const [phoneNumberError, setPhoneNumberError] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -261,5 +260,4 @@ const Signup = ({ setToken }) => {
     </div>
   );
 };
-
 export default Signup;

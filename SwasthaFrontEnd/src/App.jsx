@@ -44,7 +44,6 @@ function App() {
           <Route path="/DocSignup" element={<DoctorSignup />} />
           <Route path="/Contact" element={<Contact />} />
           <Route path="/AdminSign" element={<AdminSign />} />
-
           {/* Protected Routes */}
           <Route element={<UserProtectedRoute />}>
             <Route path="/PatientDash" element={<PatientDash />} />

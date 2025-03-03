@@ -170,26 +170,16 @@ const updateDoctor = async (req, res) => {
   try {
     const { id } = req.params;
     const {
-      doctorName,
-      doctorEmail,
-      phone,
-      speciality,
-      medicalID,
-      experience,
-
-      availableDays,
-      availableTime,
+      doctorName,doctorEmail,
+      phone,speciality,
+      medicalID,experience,
+      availableDays,availableTime,
     } = req.body;
     const doctor = await Doctor.findByPk(id);
-
     if (!doctor) {
       return res.status(404).json({ error: "Doctor not found" });
     }
-
-    // Handle the new image file if uploaded
     const doctorImage = req.file ? req.file.filename : doctor.doctorImage;
-
-    // Delete old image if a new one is uploaded
     if (req.file && doctor.doctorImage) {
       const oldImagePath = path.join(
         __dirname,
@@ -198,19 +188,14 @@ const updateDoctor = async (req, res) => {
       );
       fs.unlinkSync(oldImagePath);
     }
-
     await doctor.update({
-      doctorName,
-      doctorEmail,
-      speciality,
-      phone,
-      medicalID,
-      doctorImage,
+      doctorName,doctorEmail,
+      speciality,phone,
+      medicalID,doctorImage,
       experience,
       availableDays,
       availableTime,
     });
-
     res.status(200).json(doctor);
   } catch (error) {
     res.status(500).json({ error: error.message });
